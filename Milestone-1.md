@@ -21,7 +21,7 @@ We are going to use [this](https://github.com/CSSEGISandData/COVID-19) dataset f
 
 ## Exploratory data analysis
 
-Check the [EDA](./EDA.ipynb) notebook to see our EDA.
+Check the [EDA](./EDA.ipynb) notebook to see our EDA. As we show in this notebook, the data is very clean, complete and perfectly adapted to create a plot over time of the Corona virus impact.
 
 ## Related work
 
