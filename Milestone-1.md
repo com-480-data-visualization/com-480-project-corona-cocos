@@ -21,7 +21,7 @@ We are going to use [this](https://github.com/CSSEGISandData/COVID-19) dataset f
 
 ## Exploratory data analysis
 
-Check the [EDA](./EDA.ipynb) notebook to see our EDA. As we show in this notebook, the data is very clean, complete and perfectly adapted to create a plot over time of the Corona virus impact.
+Check the [EDA](./EDA.ipynb) notebook to see our EDA. As we show in this notebook, the data is very clean, complete and perfectly adapted to create a plot over time of the Corona virus impact. We sanitized the types, missing values, checked if the data values (number of cases) is credible and it indeed is. We also verified that the `latitude` and `longitude` attributes correspond to the country information and only one inconsistency was present.
 
 ## Related work
 
