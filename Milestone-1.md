@@ -37,7 +37,7 @@ Check the [EDA](./EDA.ipynb) notebook to see our EDA. As we show in this noteboo
   - Show the data on a world map with a time slider (option to go forward automatically at various speeds)
   - Display key events on the map when and where they happened (such as a big measure taken by country X at time Y)
 
-The general appearance will be close to the corona map example given above. However, the concept is different, this example does not permit to grap the insights we want to provide. Our goal is to be able to have an easy overview of the pandemy, of all its main aspects: number of infections/deaths/recoveries per countries but also growth rate, impact on countries policies, etc... It will provide a way to watch the history of the pandemy but also to analyze its sanitary and social impact.
+The general appearance will be close to the corona map example given above. However, the concept is different, this example does not permit to grap the insights we want to provide nor does it provide an animation of the evolution. Our goal is to be able to have an easy overview of the pandemy, of all its main aspects over time: number of infections/deaths/recoveries per countries but also growth rate, impact on countries policies, etc... It will provide a way to watch the history of the pandemy but also to analyze its sanitary and social impact.
 
 - What source of inspiration do you take? Visualizations that you found on other websites or magazines (might be unrelated to your data).
   - Data visualization of the current state of the virus using world map and charts (many available everywhere).
