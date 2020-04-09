@@ -25,12 +25,12 @@ function hslToHex(h, s, l) {
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-d3.csv('/data/time_series_covid_19_confirmed.csv', dataset => {
+d3.csv('/generated/confirmed.csv', dataset => {
     console.log(dataset)
 
     var margin = {top: 50, left: 50, right: 50, bottom: 50},
         height = 400 - margin.top - margin.bottom,
-        width = 800 - margin.left - margin.right;
+        width = 700 - margin.left - margin.right;
     console.log(height);
     console.log(width);
 
@@ -60,51 +60,147 @@ d3.csv('/data/time_series_covid_19_confirmed.csv', dataset => {
 
         console.log(countries);
 
-        displayCountry(svg, path, countries, dataset, '3/14/20')
+        displayCountry(svg, path, countries, dataset, '4/8/20')
         timeSlider(svg, path, countries, dataset, '1/22/20')
     }
 })
 
-function timeSlider(svg, path, countries, dataset, startingDate){
-    // Time
-    var dataTime = d3.range(0, 53).map(function(d) {
-        return new Date(2020, 0, 22+d);
-    });
+function timeSlider(svg, path, countries, dataset, startingDate) {
+    var formatDateIntoYearMonth = d3.timeFormat("%b %Y");
+    var formatDate = d3.timeFormat("%d %b");
+    var parseDate = d3.timeParse("%m/%d/%y");
 
-    var sliderTime = d3
-        .sliderBottom()
-        .min(d3.min(dataTime))
-        .max(d3.max(dataTime))
-        .step(1000 * 60 * 60 * 24)
-        .width(300)
-        .tickFormat(d3.timeFormat('%Y/%B/%d'))
-        .tickValues(dataTime)
-        .default(new Date(2020, 0, 22))//TODO startingDate
-        .on('onchange', val => {
-            d3.select('p#value-time').text(d3.timeFormat('%Y/%B/%d')(val));
-            const month = parseInt(d3.timeFormat('%m')(val))
-            const day = parseInt(d3.timeFormat('%d')(val))
-            const year = parseInt(d3.timeFormat('%Y')(val))%100
-            console.log(month)
-            displayCountry(svg, path, countries, dataset, `${month}/${day}/${year}`)
+    var startDate = new Date("2020-01-20"),
+        endDate = new Date("2020-04-08");
+
+    const totalDays = (endDate - startDate) / (1000 * 3600 * 24)
+
+    var margin = {top: 100, right: 20, bottom: -200, left: 20},
+        width = 600 - margin.left - margin.right,
+        height = 100 - margin.top - margin.bottom;
+
+    var svgSlider = d3.select("#vis")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom);
+
+////////// slider //////////
+
+    var moving = false;
+    var currentValue = 0;
+    var targetValue = width;
+
+    var playButton = d3.select("#play-button");
+
+    var x = d3.scaleTime()
+        .domain([startDate, endDate])
+        .range([0, targetValue])
+        .clamp(true);
+
+    var slider = svgSlider.append("g")
+        .attr("class", "slider")
+        .attr("transform", "translate(" + margin.left + "," + height / 5 + ")");
+
+    slider.append("line")
+        .attr("class", "track")
+        .attr("x1", x.range()[0])
+        .attr("x2", x.range()[1])
+        .select(function () {
+            return this.parentNode.appendChild(this.cloneNode(true));
+        })
+        .attr("class", "track-inset")
+        .select(function () {
+            return this.parentNode.appendChild(this.cloneNode(true));
+        })
+        .attr("class", "track-overlay")
+        .call(d3.drag()
+            .on("start.interrupt", function () {
+                slider.interrupt();
+            })
+            .on("start drag", function () {
+                currentValue = d3.event.x;
+                update(x.invert(currentValue));
+            })
+        );
+
+    slider.insert("g", ".track-overlay")
+        .attr("class", "ticks")
+        .attr("transform", "translate(0," + 18 + ")")
+        .selectAll("text")
+        .data(x.ticks(5))
+        .enter()
+        .append("text")
+        .attr("x", x)
+        .attr("y", 10)
+        .attr("text-anchor", "middle")
+        .text(function (d) {
+            return formatDateIntoYearMonth(d);
         });
 
-    var gTime = d3
-        .select('div#slider-time')
-        .append('svg')
-        .attr('width', 500)
-        .attr('height', 100)
-        .append('g')
-        .attr('transform', 'translate(30,30)');
+    var handle = slider.insert("circle", ".track-overlay")
+        .attr("class", "handle")
+        .attr("r", 9);
 
-    gTime.call(sliderTime);
+    var label = slider.append("text")
+        .attr("class", "label")
+        .attr("text-anchor", "middle")
+        .text(formatDate(startDate))
+        .attr("transform", "translate(0," + (-25) + ")")
 
-    d3.select('p#value-time').text(d3.timeFormat('%Y/%B/%d')(sliderTime.value()));
+    playButton
+        .on("click", function () {
+            var button = d3.select(this);
+            if (button.text() === "Pause") {
+                moving = false;
+                clearInterval(timer);
+                // timer = 0;
+                button.text("Play");
+            } else {
+                moving = true;
+                timer = setInterval(step, 200);
+                button.text("Pause");
+            }
+            console.log("Slider moving: " + moving);
+        })
+
+    function prepare(d) {
+        d.id = d.id;
+        d.date = parseDate(d.date);
+        return d;
+    }
+
+    function step() {
+        update(x.invert(currentValue));
+        currentValue = currentValue + (targetValue / totalDays);
+        if (currentValue > targetValue) {
+            moving = false;
+            currentValue = 0;
+            clearInterval(timer);
+            // timer = 0;
+            playButton.text("Play");
+            console.log("Slider moving: " + moving);
+        }
+    }
+
+    function update(h) {
+        console.log(h)
+        // update position and text of label according to slider scale
+        handle.attr("cx", x(h));
+        label
+            .attr("x", x(h))
+            .text(formatDate(h));
+
+        // Update the map
+        const month = parseInt(d3.timeFormat('%m')(h))
+        const day = parseInt(d3.timeFormat('%d')(h))
+        const year = parseInt(d3.timeFormat('%Y')(h)) % 100
+        displayCountry(svg, path, countries, dataset, `${month}/${day}/${year}`)
+    }
 }
 
 function displayCountry(svg, path, countries, dataset, date) {
     console.log(date)
-    const max = d3.max(dataset, d => parseInt(d['3/14/20']) + 1);
+    const max = d3.max(dataset, d => parseInt(d['4/8/20']) + 1);
     const logMax = Math.log(max)
 
     svg.selectAll("*").remove()
@@ -114,6 +210,7 @@ function displayCountry(svg, path, countries, dataset, date) {
         .attr("class", "country")
         .attr("fill", (d, _) => {
             const name = d.properties.name
+            console.log(d.properties.name)
             const match = dataset.filter(row => row['Country/Region'] === name)
             if (match.length > 0) {
                 const logInfected = Math.log(parseInt(match[0][date]) + 1)
