@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.5.1/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.5.1/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://rawcdn.githack.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"/>
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_3edb7b12d6194a369f22efc6267e1657 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+            <div class="folium-map" id="map_3edb7b12d6194a369f22efc6267e1657" ></div>
+        
+</body>
+<script>    
+    
+            var map_3edb7b12d6194a369f22efc6267e1657 = L.map(
+                "map_3edb7b12d6194a369f22efc6267e1657",
+                {
+                    center: [0, 0],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 1,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_0fe5ee5eae334fb48bc39e703bbad268 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+            var marker_becd5827f22f409f9e2a5842af5d4757 = L.marker(
+                [-16.2902, -63.5887],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_7facfb9425ef48738c1f206bef2b45e0 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_fc805ad5488e42858bee3f0bed64fc56 = $(`<div id="html_fc805ad5488e42858bee3f0bed64fc56" style="width: 100.0%; height: 100.0%;">Bolivia,   -16.2902, -63.5887</div>`)[0];
+            popup_7facfb9425ef48738c1f206bef2b45e0.setContent(html_fc805ad5488e42858bee3f0bed64fc56);
+        
+
+        marker_becd5827f22f409f9e2a5842af5d4757.bindPopup(popup_7facfb9425ef48738c1f206bef2b45e0)
+        ;
+
+        
+    
+    
+            marker_becd5827f22f409f9e2a5842af5d4757.bindTooltip(
+                `<div>
+                     Bolivia
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e3569101d7924cc68b8ca576456eb830 = L.marker(
+                [4.5353, 114.7277],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_f7629367f1964b79bad1b1424d88e3ab = L.popup({"maxWidth": "100%"});
+
+        
+            var html_bc83e380163e4ee782310b6aa8589175 = $(`<div id="html_bc83e380163e4ee782310b6aa8589175" style="width: 100.0%; height: 100.0%;">Brunei,   4.5353, 114.7277</div>`)[0];
+            popup_f7629367f1964b79bad1b1424d88e3ab.setContent(html_bc83e380163e4ee782310b6aa8589175);
+        
+
+        marker_e3569101d7924cc68b8ca576456eb830.bindPopup(popup_f7629367f1964b79bad1b1424d88e3ab)
+        ;
+
+        
+    
+    
+            marker_e3569101d7924cc68b8ca576456eb830.bindTooltip(
+                `<div>
+                     Brunei
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_0ca0c0ea04284ba697b5d94d3191b32d = L.marker(
+                [16.5388, -23.0418],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_e2333414db6d41b5b9d35c1e98a3bbae = L.popup({"maxWidth": "100%"});
+
+        
+            var html_43a5f6a6032243799e555ba883ba0ed4 = $(`<div id="html_43a5f6a6032243799e555ba883ba0ed4" style="width: 100.0%; height: 100.0%;">Cabo Verde,   16.5388, -23.0418</div>`)[0];
+            popup_e2333414db6d41b5b9d35c1e98a3bbae.setContent(html_43a5f6a6032243799e555ba883ba0ed4);
+        
+
+        marker_0ca0c0ea04284ba697b5d94d3191b32d.bindPopup(popup_e2333414db6d41b5b9d35c1e98a3bbae)
+        ;
+
+        
+    
+    
+            marker_0ca0c0ea04284ba697b5d94d3191b32d.bindTooltip(
+                `<div>
+                     Cabo Verde
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_86f63de456354423bbc57af1a0200b46 = L.marker(
+                [37.6489, -122.6655],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_785cced73da14c6eb20d55ec5327f87a = L.popup({"maxWidth": "100%"});
+
+        
+            var html_cea53e7894e24d7882735b8c353d7e81 = $(`<div id="html_cea53e7894e24d7882735b8c353d7e81" style="width: 100.0%; height: 100.0%;">Canada, Grand Princess  37.6489, -122.6655</div>`)[0];
+            popup_785cced73da14c6eb20d55ec5327f87a.setContent(html_cea53e7894e24d7882735b8c353d7e81);
+        
+
+        marker_86f63de456354423bbc57af1a0200b46.bindPopup(popup_785cced73da14c6eb20d55ec5327f87a)
+        ;
+
+        
+    
+    
+            marker_86f63de456354423bbc57af1a0200b46.bindTooltip(
+                `<div>
+                     Canada
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_bececc515b7345f4a86ddd510e9291ba = L.marker(
+                [37.8099, 101.0583],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_52ef5a54a846487883796c41ffb69905 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_6ca1a309fcb6418ba3297b20c627ce23 = $(`<div id="html_6ca1a309fcb6418ba3297b20c627ce23" style="width: 100.0%; height: 100.0%;">China, Gansu  37.8099, 101.0583</div>`)[0];
+            popup_52ef5a54a846487883796c41ffb69905.setContent(html_6ca1a309fcb6418ba3297b20c627ce23);
+        
+
+        marker_bececc515b7345f4a86ddd510e9291ba.bindPopup(popup_52ef5a54a846487883796c41ffb69905)
+        ;
+
+        
+    
+    
+            marker_bececc515b7345f4a86ddd510e9291ba.bindTooltip(
+                `<div>
+                     China
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_363216171d004db785a571fe7e4a8209 = L.marker(
+                [22.1667, 113.55],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_622e3e7037c44c92b8decd1db4fbfd52 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_584cd5e01c754d87ba15af8aececcc7d = $(`<div id="html_584cd5e01c754d87ba15af8aececcc7d" style="width: 100.0%; height: 100.0%;">China, Macau  22.1667, 113.55</div>`)[0];
+            popup_622e3e7037c44c92b8decd1db4fbfd52.setContent(html_584cd5e01c754d87ba15af8aececcc7d);
+        
+
+        marker_363216171d004db785a571fe7e4a8209.bindPopup(popup_622e3e7037c44c92b8decd1db4fbfd52)
+        ;
+
+        
+    
+    
+            marker_363216171d004db785a571fe7e4a8209.bindTooltip(
+                `<div>
+                     China
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_38d866b90cbc48eb9ab01a61885060ed = L.marker(
+                [35.7452, 95.9956],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_af618ef3796d4391a09b9ba9d323f297 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_36b3e359e692469fb341dd7ee3b71030 = $(`<div id="html_36b3e359e692469fb341dd7ee3b71030" style="width: 100.0%; height: 100.0%;">China, Qinghai  35.7452, 95.9956</div>`)[0];
+            popup_af618ef3796d4391a09b9ba9d323f297.setContent(html_36b3e359e692469fb341dd7ee3b71030);
+        
+
+        marker_38d866b90cbc48eb9ab01a61885060ed.bindPopup(popup_af618ef3796d4391a09b9ba9d323f297)
+        ;
+
+        
+    
+    
+            marker_38d866b90cbc48eb9ab01a61885060ed.bindTooltip(
+                `<div>
+                     China
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_fbc1e31a9d024196ad41af03261c6d81 = L.marker(
+                [-4.0383, 21.7587],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_ae21980518294f32a8cb89126a6727ae = L.popup({"maxWidth": "100%"});
+
+        
+            var html_381c6b2fd4d643eab98b06c1cdd51cca = $(`<div id="html_381c6b2fd4d643eab98b06c1cdd51cca" style="width: 100.0%; height: 100.0%;">Congo (Brazzaville),   -4.0383, 21.7587</div>`)[0];
+            popup_ae21980518294f32a8cb89126a6727ae.setContent(html_381c6b2fd4d643eab98b06c1cdd51cca);
+        
+
+        marker_fbc1e31a9d024196ad41af03261c6d81.bindPopup(popup_ae21980518294f32a8cb89126a6727ae)
+        ;
+
+        
+    
+    
+            marker_fbc1e31a9d024196ad41af03261c6d81.bindTooltip(
+                `<div>
+                     Congo (Brazzaville)
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e9a63bd641b1415f85a54394640ad7f3 = L.marker(
+                [-4.0383, 21.7587],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_33d126c75b6d41208aad40d362d3edbd = L.popup({"maxWidth": "100%"});
+
+        
+            var html_6059d30f418d4087bbf875ba8c3a157f = $(`<div id="html_6059d30f418d4087bbf875ba8c3a157f" style="width: 100.0%; height: 100.0%;">Congo (Kinshasa),   -4.0383, 21.7587</div>`)[0];
+            popup_33d126c75b6d41208aad40d362d3edbd.setContent(html_6059d30f418d4087bbf875ba8c3a157f);
+        
+
+        marker_e9a63bd641b1415f85a54394640ad7f3.bindPopup(popup_33d126c75b6d41208aad40d362d3edbd)
+        ;
+
+        
+    
+    
+            marker_e9a63bd641b1415f85a54394640ad7f3.bindTooltip(
+                `<div>
+                     Congo (Kinshasa)
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_8bc671fe2f8649a887c9e51a69fe0966 = L.marker(
+                [7.54, -5.5471],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_2a53040bca924b5b97434e6ab86a6d8a = L.popup({"maxWidth": "100%"});
+
+        
+            var html_26ceeaf0665140e1bd1298bce3cd39fe = $(`<div id="html_26ceeaf0665140e1bd1298bce3cd39fe" style="width: 100.0%; height: 100.0%;">Cote d'Ivoire,   7.54, -5.5471</div>`)[0];
+            popup_2a53040bca924b5b97434e6ab86a6d8a.setContent(html_26ceeaf0665140e1bd1298bce3cd39fe);
+        
+
+        marker_8bc671fe2f8649a887c9e51a69fe0966.bindPopup(popup_2a53040bca924b5b97434e6ab86a6d8a)
+        ;
+
+        
+    
+    
+            marker_8bc671fe2f8649a887c9e51a69fe0966.bindTooltip(
+                `<div>
+                     Cote d'Ivoire
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_455b76212871451298c7b8914b699c51 = L.marker(
+                [0.0, 0.0],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_962488f1e9b9496e99415c746e719238 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_e8f7ddc0866c45f2a471dd25f45d06d8 = $(`<div id="html_e8f7ddc0866c45f2a471dd25f45d06d8" style="width: 100.0%; height: 100.0%;">Diamond Princess,   0.0, 0.0</div>`)[0];
+            popup_962488f1e9b9496e99415c746e719238.setContent(html_e8f7ddc0866c45f2a471dd25f45d06d8);
+        
+
+        marker_455b76212871451298c7b8914b699c51.bindPopup(popup_962488f1e9b9496e99415c746e719238)
+        ;
+
+        
+    
+    
+            marker_455b76212871451298c7b8914b699c51.bindTooltip(
+                `<div>
+                     Diamond Princess
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_8f46b6639d244a198e15e03cbcf36d03 = L.marker(
+                [15.1794, 39.7823],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_a4034f20cfd14632ad6a751caf9b5577 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_aa2113d989824894af9844ce4d96c19e = $(`<div id="html_aa2113d989824894af9844ce4d96c19e" style="width: 100.0%; height: 100.0%;">Eritrea,   15.1794, 39.7823</div>`)[0];
+            popup_a4034f20cfd14632ad6a751caf9b5577.setContent(html_aa2113d989824894af9844ce4d96c19e);
+        
+
+        marker_8f46b6639d244a198e15e03cbcf36d03.bindPopup(popup_a4034f20cfd14632ad6a751caf9b5577)
+        ;
+
+        
+    
+    
+            marker_8f46b6639d244a198e15e03cbcf36d03.bindTooltip(
+                `<div>
+                     Eritrea
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e25ed778d4dd40cd82b12f53177f9bec = L.marker(
+                [-17.6797, 149.4068],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_91baa1d264b74c0d957d8d1d4212224d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_84f722ef5cbe44b18b6777040a34c164 = $(`<div id="html_84f722ef5cbe44b18b6777040a34c164" style="width: 100.0%; height: 100.0%;">France, French Polynesia  -17.6797, 149.4068</div>`)[0];
+            popup_91baa1d264b74c0d957d8d1d4212224d.setContent(html_84f722ef5cbe44b18b6777040a34c164);
+        
+
+        marker_e25ed778d4dd40cd82b12f53177f9bec.bindPopup(popup_91baa1d264b74c0d957d8d1d4212224d)
+        ;
+
+        
+    
+    
+            marker_e25ed778d4dd40cd82b12f53177f9bec.bindTooltip(
+                `<div>
+                     France
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_2a2da93c58eb41bba59bbd92838b6cc3 = L.marker(
+                [-20.9043, 165.618],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_3c912119360842038dcedb9f28f4d25a = L.popup({"maxWidth": "100%"});
+
+        
+            var html_e8c56f79f5734733aac5a31ec77660bf = $(`<div id="html_e8c56f79f5734733aac5a31ec77660bf" style="width: 100.0%; height: 100.0%;">France, New Caledonia  -20.9043, 165.618</div>`)[0];
+            popup_3c912119360842038dcedb9f28f4d25a.setContent(html_e8c56f79f5734733aac5a31ec77660bf);
+        
+
+        marker_2a2da93c58eb41bba59bbd92838b6cc3.bindPopup(popup_3c912119360842038dcedb9f28f4d25a)
+        ;
+
+        
+    
+    
+            marker_2a2da93c58eb41bba59bbd92838b6cc3.bindTooltip(
+                `<div>
+                     France
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_32cc001d622e4f918fe31115cfc6af5b = L.marker(
+                [-21.1351, 55.2471],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_48b2da70a839450b87cef35199c4d41d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ff4ef3542fe640b1bb51b9061a61b23d = $(`<div id="html_ff4ef3542fe640b1bb51b9061a61b23d" style="width: 100.0%; height: 100.0%;">France, Reunion  -21.1351, 55.2471</div>`)[0];
+            popup_48b2da70a839450b87cef35199c4d41d.setContent(html_ff4ef3542fe640b1bb51b9061a61b23d);
+        
+
+        marker_32cc001d622e4f918fe31115cfc6af5b.bindPopup(popup_48b2da70a839450b87cef35199c4d41d)
+        ;
+
+        
+    
+    
+            marker_32cc001d622e4f918fe31115cfc6af5b.bindTooltip(
+                `<div>
+                     France
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_22dfda190b7943148d694caa7d4db12e = L.marker(
+                [17.9, -62.8333],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_f8d749a1f6cb4390a904194e5eff7cdc = L.popup({"maxWidth": "100%"});
+
+        
+            var html_17c4b5af1bae4f478c4157b25c5aa48f = $(`<div id="html_17c4b5af1bae4f478c4157b25c5aa48f" style="width: 100.0%; height: 100.0%;">France, Saint Barthelemy  17.9, -62.8333</div>`)[0];
+            popup_f8d749a1f6cb4390a904194e5eff7cdc.setContent(html_17c4b5af1bae4f478c4157b25c5aa48f);
+        
+
+        marker_22dfda190b7943148d694caa7d4db12e.bindPopup(popup_f8d749a1f6cb4390a904194e5eff7cdc)
+        ;
+
+        
+    
+    
+            marker_22dfda190b7943148d694caa7d4db12e.bindTooltip(
+                `<div>
+                     France
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_09569ecf22e04a1394d08659f04f24e7 = L.marker(
+                [18.0708, -63.0501],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_48c96b99e8124ac58c6cd2f81645b43e = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a225857b14e944ccaf15e255b5ee0e05 = $(`<div id="html_a225857b14e944ccaf15e255b5ee0e05" style="width: 100.0%; height: 100.0%;">France, St Martin  18.0708, -63.0501</div>`)[0];
+            popup_48c96b99e8124ac58c6cd2f81645b43e.setContent(html_a225857b14e944ccaf15e255b5ee0e05);
+        
+
+        marker_09569ecf22e04a1394d08659f04f24e7.bindPopup(popup_48c96b99e8124ac58c6cd2f81645b43e)
+        ;
+
+        
+    
+    
+            marker_09569ecf22e04a1394d08659f04f24e7.bindTooltip(
+                `<div>
+                     France
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e2103f7dc9ae4e3baf010a2f15d444eb = L.marker(
+                [32.0, 53.0],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_bce4334fbed8406b8cefdccf6f45d84e = L.popup({"maxWidth": "100%"});
+
+        
+            var html_40db80a034ba43a480d8349c72350a8d = $(`<div id="html_40db80a034ba43a480d8349c72350a8d" style="width: 100.0%; height: 100.0%;">Iran,   32.0, 53.0</div>`)[0];
+            popup_bce4334fbed8406b8cefdccf6f45d84e.setContent(html_40db80a034ba43a480d8349c72350a8d);
+        
+
+        marker_e2103f7dc9ae4e3baf010a2f15d444eb.bindPopup(popup_bce4334fbed8406b8cefdccf6f45d84e)
+        ;
+
+        
+    
+    
+            marker_e2103f7dc9ae4e3baf010a2f15d444eb.bindTooltip(
+                `<div>
+                     Iran
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_da90e5ae61b540d58a076c422e0755a4 = L.marker(
+                [36.0, 128.0],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_b6916c34bddc4e27a26dd8c67b5be753 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_db1d508ceec04366abcd4df457b82cc9 = $(`<div id="html_db1d508ceec04366abcd4df457b82cc9" style="width: 100.0%; height: 100.0%;">Korea, South,   36.0, 128.0</div>`)[0];
+            popup_b6916c34bddc4e27a26dd8c67b5be753.setContent(html_db1d508ceec04366abcd4df457b82cc9);
+        
+
+        marker_da90e5ae61b540d58a076c422e0755a4.bindPopup(popup_b6916c34bddc4e27a26dd8c67b5be753)
+        ;
+
+        
+    
+    
+            marker_da90e5ae61b540d58a076c422e0755a4.bindTooltip(
+                `<div>
+                     Korea, South
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_7d3c6495ac3c4a01b9164337b4c7e839 = L.marker(
+                [3.2028, 73.2207],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_ed3986128f2643dbb15de82061800d78 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_b4459250199949009bdd1661ce2c369d = $(`<div id="html_b4459250199949009bdd1661ce2c369d" style="width: 100.0%; height: 100.0%;">Maldives,   3.2028, 73.2207</div>`)[0];
+            popup_ed3986128f2643dbb15de82061800d78.setContent(html_b4459250199949009bdd1661ce2c369d);
+        
+
+        marker_7d3c6495ac3c4a01b9164337b4c7e839.bindPopup(popup_ed3986128f2643dbb15de82061800d78)
+        ;
+
+        
+    
+    
+            marker_7d3c6495ac3c4a01b9164337b4c7e839.bindTooltip(
+                `<div>
+                     Maldives
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_5dae3d33781042aeadfc6cf487bd50d6 = L.marker(
+                [21.0079, 10.9408],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_502ff891beac414eb0b497fab2e303a9 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a7a6af1fb2144b959c44a551bc882f60 = $(`<div id="html_a7a6af1fb2144b959c44a551bc882f60" style="width: 100.0%; height: 100.0%;">Mauritania,   21.0079, 10.9408</div>`)[0];
+            popup_502ff891beac414eb0b497fab2e303a9.setContent(html_a7a6af1fb2144b959c44a551bc882f60);
+        
+
+        marker_5dae3d33781042aeadfc6cf487bd50d6.bindPopup(popup_502ff891beac414eb0b497fab2e303a9)
+        ;
+
+        
+    
+    
+            marker_5dae3d33781042aeadfc6cf487bd50d6.bindTooltip(
+                `<div>
+                     Mauritania
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e78fd3a36dc047b1819751e093500e16 = L.marker(
+                [47.4116, 28.3699],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_10f868f34114403e987142e1256a4a3f = L.popup({"maxWidth": "100%"});
+
+        
+            var html_6ab26ef0bed8469d82a95d07c1b14af8 = $(`<div id="html_6ab26ef0bed8469d82a95d07c1b14af8" style="width: 100.0%; height: 100.0%;">Moldova,   47.4116, 28.3699</div>`)[0];
+            popup_10f868f34114403e987142e1256a4a3f.setContent(html_6ab26ef0bed8469d82a95d07c1b14af8);
+        
+
+        marker_e78fd3a36dc047b1819751e093500e16.bindPopup(popup_10f868f34114403e987142e1256a4a3f)
+        ;
+
+        
+    
+    
+            marker_e78fd3a36dc047b1819751e093500e16.bindTooltip(
+                `<div>
+                     Moldova
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_cb93030f4d514553b613add1f0ab484d = L.marker(
+                [12.1696, -68.99],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_028ad66208fb4be5a41077e8715e36fe = L.popup({"maxWidth": "100%"});
+
+        
+            var html_67839d37af594213957a144821d59300 = $(`<div id="html_67839d37af594213957a144821d59300" style="width: 100.0%; height: 100.0%;">Netherlands, Curacao  12.1696, -68.99</div>`)[0];
+            popup_028ad66208fb4be5a41077e8715e36fe.setContent(html_67839d37af594213957a144821d59300);
+        
+
+        marker_cb93030f4d514553b613add1f0ab484d.bindPopup(popup_028ad66208fb4be5a41077e8715e36fe)
+        ;
+
+        
+    
+    
+            marker_cb93030f4d514553b613add1f0ab484d.bindTooltip(
+                `<div>
+                     Netherlands
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_f98a49516fa943d49bebdfc099f41e36 = L.marker(
+                [18.0425, -63.0548],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_daa8a8033f954faebc587c11bc4379ba = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ac1ad50c9f83483abb9bdfb2b832dbaa = $(`<div id="html_ac1ad50c9f83483abb9bdfb2b832dbaa" style="width: 100.0%; height: 100.0%;">Netherlands, Sint Maarten  18.0425, -63.0548</div>`)[0];
+            popup_daa8a8033f954faebc587c11bc4379ba.setContent(html_ac1ad50c9f83483abb9bdfb2b832dbaa);
+        
+
+        marker_f98a49516fa943d49bebdfc099f41e36.bindPopup(popup_daa8a8033f954faebc587c11bc4379ba)
+        ;
+
+        
+    
+    
+            marker_f98a49516fa943d49bebdfc099f41e36.bindTooltip(
+                `<div>
+                     Netherlands
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_022cac511bca4f389d9f03c9d341fe62 = L.marker(
+                [-40.9006, 174.886],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_7ecc7f490a93420a8fa755519665eed9 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_6056134fbd914ff3a90d6f3cd9cd45a2 = $(`<div id="html_6056134fbd914ff3a90d6f3cd9cd45a2" style="width: 100.0%; height: 100.0%;">New Zealand,   -40.9006, 174.886</div>`)[0];
+            popup_7ecc7f490a93420a8fa755519665eed9.setContent(html_6056134fbd914ff3a90d6f3cd9cd45a2);
+        
+
+        marker_022cac511bca4f389d9f03c9d341fe62.bindPopup(popup_7ecc7f490a93420a8fa755519665eed9)
+        ;
+
+        
+    
+    
+            marker_022cac511bca4f389d9f03c9d341fe62.bindTooltip(
+                `<div>
+                     New Zealand
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_50bf484871134aedb7a6916c6b1a7a1f = L.marker(
+                [60.0, 90.0],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_da4c61634b2b4205a18126e03d5e59dd = L.popup({"maxWidth": "100%"});
+
+        
+            var html_24750eadfdea4239870b629c3ee7541f = $(`<div id="html_24750eadfdea4239870b629c3ee7541f" style="width: 100.0%; height: 100.0%;">Russia,   60.0, 90.0</div>`)[0];
+            popup_da4c61634b2b4205a18126e03d5e59dd.setContent(html_24750eadfdea4239870b629c3ee7541f);
+        
+
+        marker_50bf484871134aedb7a6916c6b1a7a1f.bindPopup(popup_da4c61634b2b4205a18126e03d5e59dd)
+        ;
+
+        
+    
+    
+            marker_50bf484871134aedb7a6916c6b1a7a1f.bindTooltip(
+                `<div>
+                     Russia
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_dd44a89da8f742568c285f8918e678fc = L.marker(
+                [12.9843, -61.2872],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_44aa7fce8f2f4559bf6a4b8b33a0725a = L.popup({"maxWidth": "100%"});
+
+        
+            var html_148c41a30e174db0a7e88c6fb5bc9ae0 = $(`<div id="html_148c41a30e174db0a7e88c6fb5bc9ae0" style="width: 100.0%; height: 100.0%;">Saint Vincent and the Grenadines,   12.9843, -61.2872</div>`)[0];
+            popup_44aa7fce8f2f4559bf6a4b8b33a0725a.setContent(html_148c41a30e174db0a7e88c6fb5bc9ae0);
+        
+
+        marker_dd44a89da8f742568c285f8918e678fc.bindPopup(popup_44aa7fce8f2f4559bf6a4b8b33a0725a)
+        ;
+
+        
+    
+    
+            marker_dd44a89da8f742568c285f8918e678fc.bindTooltip(
+                `<div>
+                     Saint Vincent and the Grenadines
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_7af51a67cc5d46d0a99a9b6b86f785b8 = L.marker(
+                [23.7, 121.0],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_e0e4a83fe34a44319e926c700332001f = L.popup({"maxWidth": "100%"});
+
+        
+            var html_4d5bfe2f34004418a00ba458ff719a30 = $(`<div id="html_4d5bfe2f34004418a00ba458ff719a30" style="width: 100.0%; height: 100.0%;">Taiwan*,   23.7, 121.0</div>`)[0];
+            popup_e0e4a83fe34a44319e926c700332001f.setContent(html_4d5bfe2f34004418a00ba458ff719a30);
+        
+
+        marker_7af51a67cc5d46d0a99a9b6b86f785b8.bindPopup(popup_e0e4a83fe34a44319e926c700332001f)
+        ;
+
+        
+    
+    
+            marker_7af51a67cc5d46d0a99a9b6b86f785b8.bindTooltip(
+                `<div>
+                     Taiwan*
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_11c24eb53934445586f8db5a3a8f04de = L.marker(
+                [-6.369, 34.8888],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_2862f2ca21d743f0922dbfce57ca3e73 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ffd72772874d45d585125cecdd546710 = $(`<div id="html_ffd72772874d45d585125cecdd546710" style="width: 100.0%; height: 100.0%;">Tanzania,   -6.369, 34.8888</div>`)[0];
+            popup_2862f2ca21d743f0922dbfce57ca3e73.setContent(html_ffd72772874d45d585125cecdd546710);
+        
+
+        marker_11c24eb53934445586f8db5a3a8f04de.bindPopup(popup_2862f2ca21d743f0922dbfce57ca3e73)
+        ;
+
+        
+    
+    
+            marker_11c24eb53934445586f8db5a3a8f04de.bindTooltip(
+                `<div>
+                     Tanzania
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e80bdb1acd7c43ef824cfb0fb943cb71 = L.marker(
+                [49.3723, -2.3644],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_77d7d6d8fa38436cab474787f3e71dc1 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a463e55a348749d88ae0ebc427512589 = $(`<div id="html_a463e55a348749d88ae0ebc427512589" style="width: 100.0%; height: 100.0%;">United Kingdom, Channel Islands  49.3723, -2.3644</div>`)[0];
+            popup_77d7d6d8fa38436cab474787f3e71dc1.setContent(html_a463e55a348749d88ae0ebc427512589);
+        
+
+        marker_e80bdb1acd7c43ef824cfb0fb943cb71.bindPopup(popup_77d7d6d8fa38436cab474787f3e71dc1)
+        ;
+
+        
+    
+    
+            marker_e80bdb1acd7c43ef824cfb0fb943cb71.bindTooltip(
+                `<div>
+                     United Kingdom
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_b7ed7d29d3274a80a6ae605337261ae1 = L.marker(
+                [55.3781, -3.4360000000000004],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_47d19428f6d145ab84d87b7d1e2ea69f = L.popup({"maxWidth": "100%"});
+
+        
+            var html_d8cfd1c820554ec9bb8cad1e663c5611 = $(`<div id="html_d8cfd1c820554ec9bb8cad1e663c5611" style="width: 100.0%; height: 100.0%;">United Kingdom,   55.3781, -3.4360000000000004</div>`)[0];
+            popup_47d19428f6d145ab84d87b7d1e2ea69f.setContent(html_d8cfd1c820554ec9bb8cad1e663c5611);
+        
+
+        marker_b7ed7d29d3274a80a6ae605337261ae1.bindPopup(popup_47d19428f6d145ab84d87b7d1e2ea69f)
+        ;
+
+        
+    
+    
+            marker_b7ed7d29d3274a80a6ae605337261ae1.bindTooltip(
+                `<div>
+                     United Kingdom
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_a937e2321ec94a828859589095aef7d2 = L.marker(
+                [37.0902, -95.7129],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_3e7495e927dd4028800903f66c67d9e9 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_51b361c146154ed7857db62936772352 = $(`<div id="html_51b361c146154ed7857db62936772352" style="width: 100.0%; height: 100.0%;">US,   37.0902, -95.7129</div>`)[0];
+            popup_3e7495e927dd4028800903f66c67d9e9.setContent(html_51b361c146154ed7857db62936772352);
+        
+
+        marker_a937e2321ec94a828859589095aef7d2.bindPopup(popup_3e7495e927dd4028800903f66c67d9e9)
+        ;
+
+        
+    
+    
+            marker_a937e2321ec94a828859589095aef7d2.bindTooltip(
+                `<div>
+                     US
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_d9ed4250b49e4b5d9cf7501335514154 = L.marker(
+                [6.4238, -66.5897],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_11192e65e6034d699fd55561be59e20d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_d9ed430662894af58a9f55d67a7d7433 = $(`<div id="html_d9ed430662894af58a9f55d67a7d7433" style="width: 100.0%; height: 100.0%;">Venezuela,   6.4238, -66.5897</div>`)[0];
+            popup_11192e65e6034d699fd55561be59e20d.setContent(html_d9ed430662894af58a9f55d67a7d7433);
+        
+
+        marker_d9ed4250b49e4b5d9cf7501335514154.bindPopup(popup_11192e65e6034d699fd55561be59e20d)
+        ;
+
+        
+    
+    
+            marker_d9ed4250b49e4b5d9cf7501335514154.bindTooltip(
+                `<div>
+                     Venezuela
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_d1e453dd8ae34459a797e2674e1523e3 = L.marker(
+                [16.0, 108.0],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_17fc08ecb6c24efb8b3e6b02a58408f5 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_372ac1fdcf1c48deb804c440d73eba71 = $(`<div id="html_372ac1fdcf1c48deb804c440d73eba71" style="width: 100.0%; height: 100.0%;">Vietnam,   16.0, 108.0</div>`)[0];
+            popup_17fc08ecb6c24efb8b3e6b02a58408f5.setContent(html_372ac1fdcf1c48deb804c440d73eba71);
+        
+
+        marker_d1e453dd8ae34459a797e2674e1523e3.bindPopup(popup_17fc08ecb6c24efb8b3e6b02a58408f5)
+        ;
+
+        
+    
+    
+            marker_d1e453dd8ae34459a797e2674e1523e3.bindTooltip(
+                `<div>
+                     Vietnam
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_2703add606d54f2d83247d8eac172154 = L.marker(
+                [0.0, 0.0],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_3fbc67dfef1e4e5282238b4e021b8137 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_56301817574d481dba67a900bd61dadb = $(`<div id="html_56301817574d481dba67a900bd61dadb" style="width: 100.0%; height: 100.0%;">Canada, Diamond Princess  0.0, 0.0</div>`)[0];
+            popup_3fbc67dfef1e4e5282238b4e021b8137.setContent(html_56301817574d481dba67a900bd61dadb);
+        
+
+        marker_2703add606d54f2d83247d8eac172154.bindPopup(popup_3fbc67dfef1e4e5282238b4e021b8137)
+        ;
+
+        
+    
+    
+            marker_2703add606d54f2d83247d8eac172154.bindTooltip(
+                `<div>
+                     Canada
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_eec525ce319449d0a69a136e73e695ca = L.marker(
+                [34.802075, 38.99681500000001],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_41b9e1beda6d427d85dc4b12e1c20af9 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_147894ec33ba4b32ad2f68b74afdaacb = $(`<div id="html_147894ec33ba4b32ad2f68b74afdaacb" style="width: 100.0%; height: 100.0%;">Syria,   34.802075, 38.99681500000001</div>`)[0];
+            popup_41b9e1beda6d427d85dc4b12e1c20af9.setContent(html_147894ec33ba4b32ad2f68b74afdaacb);
+        
+
+        marker_eec525ce319449d0a69a136e73e695ca.bindPopup(popup_41b9e1beda6d427d85dc4b12e1c20af9)
+        ;
+
+        
+    
+    
+            marker_eec525ce319449d0a69a136e73e695ca.bindTooltip(
+                `<div>
+                     Syria
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e36ea98e3ca04b3c881c85d0e67e4068 = L.marker(
+                [13.1939, -59.5432],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_49eb785439f7412cb4f35bc45cda4586 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_f5fd4dbed0134cb7966405b9b58722c9 = $(`<div id="html_f5fd4dbed0134cb7966405b9b58722c9" style="width: 100.0%; height: 100.0%;">Belize,   13.1939, -59.5432</div>`)[0];
+            popup_49eb785439f7412cb4f35bc45cda4586.setContent(html_f5fd4dbed0134cb7966405b9b58722c9);
+        
+
+        marker_e36ea98e3ca04b3c881c85d0e67e4068.bindPopup(popup_49eb785439f7412cb4f35bc45cda4586)
+        ;
+
+        
+    
+    
+            marker_e36ea98e3ca04b3c881c85d0e67e4068.bindTooltip(
+                `<div>
+                     Belize
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_4c03d93976a24011a2b7449c66560f49 = L.marker(
+                [0.0, 0.0],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_ff36df1567dd4866ab0234c0d8f6ac39 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_49a0455d40364309bf2a25eb69bcb295 = $(`<div id="html_49a0455d40364309bf2a25eb69bcb295" style="width: 100.0%; height: 100.0%;">Canada, Recovered  0.0, 0.0</div>`)[0];
+            popup_ff36df1567dd4866ab0234c0d8f6ac39.setContent(html_49a0455d40364309bf2a25eb69bcb295);
+        
+
+        marker_4c03d93976a24011a2b7449c66560f49.bindPopup(popup_ff36df1567dd4866ab0234c0d8f6ac39)
+        ;
+
+        
+    
+    
+            marker_4c03d93976a24011a2b7449c66560f49.bindTooltip(
+                `<div>
+                     Canada
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_c729b16a72484a88b932130862ef9d29 = L.marker(
+                [19.85627, 102.495496],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_98c00b765cc34d9b83edd86140dff951 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_0f9b99e896c6428ead9fb7c0d4b3ce76 = $(`<div id="html_0f9b99e896c6428ead9fb7c0d4b3ce76" style="width: 100.0%; height: 100.0%;">Laos,   19.85627, 102.495496</div>`)[0];
+            popup_98c00b765cc34d9b83edd86140dff951.setContent(html_0f9b99e896c6428ead9fb7c0d4b3ce76);
+        
+
+        marker_c729b16a72484a88b932130862ef9d29.bindPopup(popup_98c00b765cc34d9b83edd86140dff951)
+        ;
+
+        
+    
+    
+            marker_c729b16a72484a88b932130862ef9d29.bindTooltip(
+                `<div>
+                     Laos
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_b980efe747064c969af05bd0cae15494 = L.marker(
+                [31.9522, 35.2332],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_560475ed382c4018a08e1e9530295bde = L.popup({"maxWidth": "100%"});
+
+        
+            var html_9b7aae5245c94bc6b2565ca52dc859cf = $(`<div id="html_9b7aae5245c94bc6b2565ca52dc859cf" style="width: 100.0%; height: 100.0%;">West Bank and Gaza,   31.9522, 35.2332</div>`)[0];
+            popup_560475ed382c4018a08e1e9530295bde.setContent(html_9b7aae5245c94bc6b2565ca52dc859cf);
+        
+
+        marker_b980efe747064c969af05bd0cae15494.bindPopup(popup_560475ed382c4018a08e1e9530295bde)
+        ;
+
+        
+    
+    
+            marker_b980efe747064c969af05bd0cae15494.bindTooltip(
+                `<div>
+                     West Bank and Gaza
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_38ef5cbc27124a14b88b5e94c8b8416a = L.marker(
+                [42.602636, 20.902977],
+                {}
+            ).addTo(map_3edb7b12d6194a369f22efc6267e1657);
+        
+    
+        var popup_56c521b2ea394d1c93aebf66f1bcd2fd = L.popup({"maxWidth": "100%"});
+
+        
+            var html_be19afe95b3547f59af4f75d2ad60aab = $(`<div id="html_be19afe95b3547f59af4f75d2ad60aab" style="width: 100.0%; height: 100.0%;">Kosovo,   42.602636, 20.902977</div>`)[0];
+            popup_56c521b2ea394d1c93aebf66f1bcd2fd.setContent(html_be19afe95b3547f59af4f75d2ad60aab);
+        
+
+        marker_38ef5cbc27124a14b88b5e94c8b8416a.bindPopup(popup_56c521b2ea394d1c93aebf66f1bcd2fd)
+        ;
+
+        
+    
+    
+            marker_38ef5cbc27124a14b88b5e94c8b8416a.bindTooltip(
+                `<div>
+                     Kosovo
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>

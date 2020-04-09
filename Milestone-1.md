@@ -21,12 +21,13 @@ We are going to use [this](https://github.com/CSSEGISandData/COVID-19) dataset f
 
 ## Exploratory data analysis
 
-Check the [EDA](./EDA.ipynb) notebook to see our EDA.
+Check the [EDA](./EDA.ipynb) notebook to see our EDA. As we show in this notebook, the data is very clean, complete and perfectly adapted to create a plot over time of the Corona virus impact. We sanitized the types, missing values, checked if the data values (number of cases) is credible and it indeed is. We also verified that the `latitude` and `longitude` attributes correspond to the country information and only one inconsistency was present.
 
 ## Related work
 
 - What others have already done with the data?
-  - Visualization of number of infected/death/recovered on a world map for the current day.
+  - Visualization of number of infected/death/recovered on a world map for the current day: [here](https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6)'s an example done with the dataset we'll use
+	- Simple time dependent world map: [coronamap](https://thecoronamap.com)
   - Charts & graphs of number of infected/death/recovered per country
   - Graph of the evolution of the virus over time for a country or for the whole world
 
@@ -36,8 +37,10 @@ Check the [EDA](./EDA.ipynb) notebook to see our EDA.
   - Show the data on a world map with a time slider (option to go forward automatically at various speeds)
   - Display key events on the map when and where they happened (such as a big measure taken by country X at time Y)
 
+The general appearance will be close to the corona map example given above. However, the concept is different, this example does not permit to grap the insights we want to provide nor does it provide an animation of the evolution. Our goal is to be able to have an easy overview of the pandemy, of all its main aspects over time: number of infections/deaths/recoveries per countries but also growth rate, impact on countries policies, etc... It will provide a way to watch the history of the pandemy but also to analyze its sanitary and social impact.
+
 - What source of inspiration do you take? Visualizations that you found on other websites or magazines (might be unrelated to your data).
-  - Data visualization of the current state of the virus using world map and charts (many available everywhere, for instance [here](https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6) is an example done with the dataset we'll use)
+  - Data visualization of the current state of the virus using world map and charts (many available everywhere).
 
 - In case you are using a dataset that you have already explored in another context (ML or ADA course, semester project...), you are required to share the report of that work to outline the differences with the submission for this class.
   - We've never used this dataset before
