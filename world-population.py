@@ -1,6 +1,7 @@
 import csv
 import requests
 from bs4 import BeautifulSoup
+import re
 
 
 def scrape_population():
@@ -16,7 +17,17 @@ def scrape_population():
         name = fields[0].find('a')['title']
         population = fields[-2].text.replace(',', '')
 
+        # Rename countries
+        name = name.replace('The Bahamas', 'Bahamas')
+        name = name.replace('The Gambia', 'Gambia')
+        name = name.replace('Georgia (country)', 'Georgia')
+        name = name.replace('Republic of Ireland', 'Ireland')
+        name = re.sub('^Republic of the Congo', 'Congo', name)
+        name = name.replace('East Timor', 'Timor-Leste')
 
+        if name == 'Serbia':
+            # Remove Kosovo population
+            population = '7078110'
 
         rows.append([name, population])
     
