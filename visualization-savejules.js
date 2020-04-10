@@ -37,7 +37,7 @@ function ready(error, data) {
         .enter().append("path")
         .attr("class", "country")
         .attr("d", path)
-		continentZoom('worldButton')
+		//continentZoom('worldButton')
 }
 
 function continentZoom(idButton) {
