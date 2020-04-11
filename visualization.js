@@ -60,7 +60,7 @@ d3.csv('/generated/confirmed.csv', dataset => {
 
         console.log(countries);
 
-        displayCountry(svg, path, countries, dataset, '4/8/20')
+        displayCountries(svg, path, countries, dataset, '1/22/20')
         timeSlider(svg, path, countries, dataset, '1/22/20')
     }
 })
@@ -70,7 +70,7 @@ function timeSlider(svg, path, countries, dataset, startingDate) {
     var formatDate = d3.timeFormat("%d %b");
     var parseDate = d3.timeParse("%m/%d/%y");
 
-    var startDate = new Date("2020-01-20"),
+    var startDate = new Date("2020-01-22"),
         endDate = new Date("2020-04-08");
 
     const totalDays = (endDate - startDate) / (1000 * 3600 * 24)
@@ -160,7 +160,6 @@ function timeSlider(svg, path, countries, dataset, startingDate) {
                 timer = setInterval(step, 200);
                 button.text("Pause");
             }
-            console.log("Slider moving: " + moving);
         })
 
     function prepare(d) {
@@ -178,12 +177,10 @@ function timeSlider(svg, path, countries, dataset, startingDate) {
             clearInterval(timer);
             // timer = 0;
             playButton.text("Play");
-            console.log("Slider moving: " + moving);
         }
     }
 
     function update(h) {
-        console.log(h)
         // update position and text of label according to slider scale
         handle.attr("cx", x(h));
         label
@@ -194,44 +191,124 @@ function timeSlider(svg, path, countries, dataset, startingDate) {
         const month = parseInt(d3.timeFormat('%m')(h))
         const day = parseInt(d3.timeFormat('%d')(h))
         const year = parseInt(d3.timeFormat('%Y')(h)) % 100
-        displayCountry(svg, path, countries, dataset, `${month}/${day}/${year}`)
+        updateCountriesColor(svg, path, countries, dataset, `${month}/${day}/${year}`)
     }
 }
 
-function displayCountry(svg, path, countries, dataset, date) {
-    console.log(date)
-    const max = d3.max(dataset, d => parseInt(d['4/8/20']) + 1);
-    const logMax = Math.log(max)
+/**
+ * Display countries given topojson data and infected people data
+ * @param svg to display the map on
+ * @param path projection world map (such as Mercator)
+ * @param countries topojson data
+ * @param dataset infected people data
+ * @param date
+ */
+function displayCountries(svg, path, countries, dataset, date) {
+    const max = d3.max(dataset, d => parseInt(d['4/8/20']) / parseInt(d['population']) * 1_000_000 + 1);
+    const logMax = Math.log2(max)
 
-    svg.selectAll("*").remove()
+    var colorScale = d3.scaleLinear()
+        .domain([0, 100])
+        .range(['#FFFFFF', '#FF0000', '#000000']);
+
+    // append a defs (for definition) element to your SVG
+    var svgLegend = d3.select('body').append('svg')
+        .attr("width", 900);
+    var defs = svgLegend.append('defs');
+
+    // append a linearGradient element to the defs and give it a unique id
+    var linearGradient = defs.append('linearGradient')
+        .attr('id', 'linear-gradient');
+
+    // horizontal gradient
+    linearGradient
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "0%");
+
+    // append multiple color stops by using D3's data/enter step
+    linearGradient.selectAll("stop")
+        .data([
+            {offset: "0%", color: "#FFFFFF"},
+            {offset: "50%", color: "#FF0000"},
+            {offset: "100%", color: "#000000"}
+        ])
+        .enter().append("stop")
+        .attr("offset", function (d) {
+            return d.offset;
+        })
+        .attr("stop-color", function (d) {
+            return d.color;
+        });
+
+    // append title
+    svgLegend.append("text")
+        .attr("class", "legendTitle")
+        .attr("x", 0)
+        .attr("y", 20)
+        .style("text-anchor", "left")
+        .text("Legend title");
+
+    // draw the rectangle and fill with gradient
+    svgLegend.append("rect")
+        .attr("x", 10)
+        .attr("y", 30)
+        .attr("width", 791)
+        .attr("height", 15)
+        .style("fill", "url(#linear-gradient)");
+
+    //create tick marks
+    console.log(`max ${(max - 1)/1_000_000}`)
+    var xLeg = d3.scaleLog()
+        .domain([1/1_000_000,(max - 1)/1_000_000])
+        .range([10, 800]) // This is where the axis is placed: from 10 px to 400px
+        .base(2)
+
+
+    var axisLeg = d3.axisBottom(xLeg)
+        .tickFormat(d3.format(".2s"))
+
+    svgLegend
+        .attr("class", "axis")
+        .append("g")
+        .attr("transform", "translate(0, 40)")
+        .call(axisLeg);
+
     svg.selectAll(".country")
         .data(countries)
         .enter().append("path")
         .attr("class", "country")
-        .attr("fill", (d, _) => {
-            const name = d.properties.name
-            console.log(d.properties.name)
-            const match = dataset.filter(row => row['Country/Region'] === name)
-            if (match.length > 0) {
-                const logInfected = Math.log(parseInt(match[0][date]) + 1)
-                return hslToHex(0, 1, 1 - logInfected / logMax / 2)
-            } else {
-                return hslToHex(0, 1, 0)
-            }
-        })
         .attr("stroke-width", 0.3)
         .attr("stroke", "black")
+        .attr("d", path)
+
+    updateCountriesColor(svg, path, countries, dataset, date)
+}
+
+function updateCountriesColor(svg, path, countries, dataset, date) {
+    const max = d3.max(dataset, d => parseInt(d['4/8/20']) / parseInt(d['population']) * 1_000_000 + 1);
+    const logMax = Math.log2(max)
+
+    svg.selectAll(".country")
+        .attr("fill", (d, _) => {
+            const name = d.properties.name
+            const match = dataset.filter(row => row['Country/Region'] === name)
+            if (match.length > 0) {
+                const logInfected = Math.log2(parseInt(match[0][date]) / parseInt(match[0]['population']) * 1_000_000 + 1)
+                return hslToHex(0, 1, 1 - logInfected / logMax)
+            } else {
+                return hslToHex(180, 1, 50)
+            }
+        })
         .on("click", (d, _) => {
             const name = d.properties.name
             const match = dataset.filter(row => row['Country/Region'] === name)
             if (match.length > 0) {
-                const logInfected = Math.log(parseInt(match[0][date]) + 1)
+                const infectedRate = parseInt(match[0][date]) / parseInt(match[0]['population'])
 
-                console.log(logInfected)
-                console.log(logMax)
-                console.log(1 - (logInfected / logMax / 2))
+                console.log(name)
+                console.log(`${infectedRate * 100}% of population infected`)
             }
-            console.log(d.properties.name)
         })
-        .attr("d", path)
 }
