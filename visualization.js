@@ -473,7 +473,7 @@ function onCountryClicked(countryData, dataset, date) {
     }
 }
 
-d3.csv('/generated/confirmed.csv', dataset => {
+d3.csv('./generated/confirmed.csv', dataset => {
 
     d3.queue()
         .defer(d3.json, "world.topojson")
