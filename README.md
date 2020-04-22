@@ -14,7 +14,7 @@
 
 The files for this milestone:
 - [Milestone-1.md](./Milestone-1.md) for all the explanation of the data and the project's goal.
-- [EDA.ipynb](./EDA.ipynb)
+- [eda/EDA.ipynb](./eda/EDA.ipynb)
 
 
 ## Milestone 2 (Friday 1st May, 5pm)
