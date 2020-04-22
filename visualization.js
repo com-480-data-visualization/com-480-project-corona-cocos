@@ -1,71 +1,78 @@
-const minDate = "1/22/20";
-const maxDate = "4/8/20";
+const minDate = "2020-01-22";
+const maxDate = "2020-04-08";
+const startDate = new Date(minDate);
+const endDate = new Date(maxDate);
+const ticksCount = 5;
+
+function timeToString(date) {
+    return d3.timeFormat("%Y-%m-%d")(date)
+}
 
 const margin = {top: 50, left: 50, right: 50, bottom: 50},
-	height = 600 - margin.top - margin.bottom,
-	width = 1200 - margin.left - margin.right;
+    height = 600 - margin.top - margin.bottom,
+    width = 1200 - margin.left - margin.right;
 
 var svg = d3.select("#map")
-	.append("svg")
-	.attr("height", height + margin.top + margin.bottom)
-	.attr("width", width + margin.left + margin.right)
-	.append("g")
-	.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    .append("svg")
+    .attr("height", height + margin.top + margin.bottom)
+    .attr("width", width + margin.left + margin.right)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
 function continentZoom(idButton) {
-	let x
-	let y
-	let zoom
+    let x
+    let y
+    let zoom
 
-	if (idButton == 'worldButton') {
-		zoom = 2
-		x = width/20
-		y = height/10
-	} else if(idButton == 'euButton') {
-		zoom = 6
-		x = width/20
-		y = height/4
-	} else if(idButton == 'asiaButton') {
-		x = -width/10
-		y = height/6
-		zoom = 3
-	} else if(idButton == 'naButton') {
-		x = width/4.5
-		y = height/5
-		zoom = 4.5
-	} else if(idButton == 'saButton') {
-		x = width/7
-		y = -height/18
-		zoom = 4.2
-	} else if(idButton == 'afrButton') {
-		x = width/20
-		y = height/20
-		zoom = 3.8
-	} else if(idButton == 'austrButton') {
-		x = -width/7
-		y = -height/15
-		zoom = 3.8
-	}
+    if (idButton == 'worldButton') {
+        zoom = 2
+        x = width / 20
+        y = height / 10
+    } else if (idButton == 'euButton') {
+        zoom = 6
+        x = width / 20
+        y = height / 4
+    } else if (idButton == 'asiaButton') {
+        x = -width / 10
+        y = height / 6
+        zoom = 3
+    } else if (idButton == 'naButton') {
+        x = width / 4.5
+        y = height / 5
+        zoom = 4.5
+    } else if (idButton == 'saButton') {
+        x = width / 7
+        y = -height / 18
+        zoom = 4.2
+    } else if (idButton == 'afrButton') {
+        x = width / 20
+        y = height / 20
+        zoom = 3.8
+    } else if (idButton == 'austrButton') {
+        x = -width / 7
+        y = -height / 15
+        zoom = 3.8
+    }
 
-	console.log(x+" "+width)
-	console.log(y+" "+height)
+    console.log(x + " " + width)
+    console.log(y + " " + height)
 
-	center_x = (width/2)-(width/(zoom*2))
-	center_y = height/2-height/(zoom*2)
+    center_x = (width / 2) - (width / (zoom * 2))
+    center_y = height / 2 - height / (zoom * 2)
 
-	console.log("cx"+center_x+" cy"+center_y)
+    console.log("cx" + center_x + " cy" + center_y)
 
-	x = -center_x + x
-	y = -center_y + y
+    x = -center_x + x
+    y = -center_y + y
 
-	console.log('x final '+x+" y final "+y)
+    console.log('x final ' + x + " y final " + y)
 
-	let s = `scale(${zoom})`+`translate(${x},${y})`
-	console.log("str: "+s)
+    let s = `scale(${zoom})` + `translate(${x},${y})`
+    console.log("str: " + s)
 
-	svg.transition()
-		.duration(1000)
-		.attr('transform', s)
+    svg.transition()
+        .duration(1000)
+        .attr('transform', s)
 }
 
 function hslToHex(h, s, l) {
@@ -95,26 +102,20 @@ function hslToHex(h, s, l) {
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-function timeSlider(svg, path, countries, dataset, startingDate) {
+function timeSlider(svg, path, countries, dataset) {
     var formatDateIntoYearMonth = d3.timeFormat("%b %Y");
     var formatDate = d3.timeFormat("%d %b");
-    var parseDate = d3.timeParse("%m/%d/%y");
-
-    var startDate = new Date("2020-01-22"),
-        endDate = new Date("2020-04-08");
 
     const totalDays = (endDate - startDate) / (1000 * 3600 * 24)
 
     var margin = {top: 100, right: 20, bottom: -200, left: 20},
         width = 600 - margin.left - margin.right,
-        height = 100 - margin.top - margin.bottom;
+        height = 80 - margin.top - margin.bottom;
 
-    var svgSlider = d3.select("#vis")
+    var svgSlider = d3.select("#slider")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom);
-
-////////// slider //////////
 
     var moving = false;
     var currentValue = 0;
@@ -157,7 +158,7 @@ function timeSlider(svg, path, countries, dataset, startingDate) {
         .attr("class", "ticks")
         .attr("transform", "translate(0," + 18 + ")")
         .selectAll("text")
-        .data(x.ticks(5))
+        .data(x.ticks(ticksCount))
         .enter()
         .append("text")
         .attr("x", x)
@@ -212,10 +213,7 @@ function timeSlider(svg, path, countries, dataset, startingDate) {
             .text(formatDate(h));
 
         // Update the map
-        const month = parseInt(d3.timeFormat('%m')(h))
-        const day = parseInt(d3.timeFormat('%d')(h))
-        const year = parseInt(d3.timeFormat('%Y')(h)) % 100
-        updateCountriesColor(svg, path, countries, dataset, `${month}/${day}/${year}`)
+        updateCountriesColor(svg, path, countries, dataset, timeToString(h))
     }
 }
 
@@ -283,9 +281,9 @@ function displayCountries(svg, path, countries, dataset, date) {
         .style("fill", "url(#linear-gradient)");
 
     //create tick marks
-    console.log(`max ${(max - 1)/1_000_000}`)
+    console.log(`max ${(max - 1) / 1_000_000}`)
     var xLeg = d3.scaleLog()
-        .domain([1/1_000_000,(max - 1)/1_000_000])
+        .domain([1 / 1_000_000, (max - 1) / 1_000_000])
         .range([10, 800]) // This is where the axis is placed: from 10 px to 400px
         .base(2)
 
@@ -330,22 +328,32 @@ function updateCountriesColor(svg, path, countries, dataset, date) {
 
 function onCountryClicked(countryData, dataset, date) {
     const name = countryData.properties.name
-    const match = dataset.filter(row => row['Country/Region'] === name)
+    const match = dataset.filter(row => row['Country/Region'] === name)[0]
     if (match.length > 0) {
-        const infectedRate = parseInt(match[0][date]) / parseInt(match[0]['population'])
+        const infectedRate = parseInt(match[date]) / parseInt(match['population'])
 
         console.log(name)
         console.log(`${infectedRate * 100}% of population infected`)
-        console.log(`${parseInt(match[0][date]) } people infected`)
+        console.log(`${parseInt(match[date])} people infected`)
     }
 
-    console.log(match);
+    function formatMatch(match) {
+        var formatted = []
+        for (var d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+            formatted.push({date: new Date(d), value: match[timeToString(d)]});
+        }
+        return formatted
+    }
 
+    const matchRows = formatMatch(match);
 
     // set the dimensions and margins of the graph
-    var margin = {top: 10, right: 30, bottom: 30, left: 60},
-        width = 460 - margin.left - margin.right,
+    var margin = {top: 10, right: 200, bottom: 30, left: 60},
+        width = 630 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
+
+    // Remove previous graphs
+    d3.select("#graph").selectAll("*").remove();
 
     // append the svg object to the body of the page
     var svg = d3.select("#graph")
@@ -353,100 +361,107 @@ function onCountryClicked(countryData, dataset, date) {
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // Add X axis --> it is a date format
+    var x = d3.scaleTime()
+        .domain([startDate, endDate])
+        .range([0, width]);
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x).ticks(ticksCount));
+
+    // Add Y axis
+    var y = d3
+        //.scaleLinear()
+        .scaleLog().base(2)
+        .domain([1, match[maxDate]])
+        .range([height, 0]);
+    svg.append("g")
+        .call(d3.axisLeft(y));
+
+    // This allows to find the closest X index of the mouse:
+    var bisect = d3.bisector(function (d) {
+        return d.date;
+    }).left;
+
+    // Create the circle that travels along the curve of chart
+    var focus = svg
+        .append('g')
+        .append('circle')
+        .style("fill", "red")
+        .attr("stroke", "black")
+        .attr('r', 5)
+        .style("opacity", 0)
+
+    // Create the text that travels along the curve of chart
+    var focusText = svg
+        .append('g')
+        .append('text')
+        .style("opacity", 0)
+        .attr("text-anchor", "left")
+        .attr("alignment-baseline", "middle")
         .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+            "translate(" + 13 + "," + 0 + ")");
 
-    // Read the data
-    d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_IC.csv",function(data) {
+    // Add the line
+    svg
+        .append("path")
+        .datum(matchRows)
+        .attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", 1.5)
+        .attr("d", d3.line()
+            .x(function (d) {
+                return x(d.date)
+            })
+            .y(function (d) {
+                return y(parseInt(d.value) + 1)
+            })
+        )
 
-        // Add X axis --> it is a date format
-        var x = d3.scaleTime()
-            .domain([minDate,maxDate])
-            .range([ 0, width ]);
-        svg.append("g")
-            .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x));
-
-        // Add Y axis
-        var y = d3.scaleLinear()
-            .domain([0, 13])
-            .range([ height, 0 ]);
-        svg.append("g")
-            .call(d3.axisLeft(y));
-
-        // This allows to find the closest X index of the mouse:
-        var bisect = d3.bisector(function(d) { return d.x; }).left;
-
-        // Create the circle that travels along the curve of chart
-        var focus = svg
-            .append('g')
-            .append('circle')
-            .style("fill", "none")
-            .attr("stroke", "black")
-            .attr('r', 8.5)
-            .style("opacity", 0)
-
-        // Create the text that travels along the curve of chart
-        var focusText = svg
-            .append('g')
-            .append('text')
-            .style("opacity", 0)
-            .attr("text-anchor", "left")
-            .attr("alignment-baseline", "middle")
-
-        // Create a rect on top of the svg area: this rectangle recovers mouse position
-        svg
-            .append('rect')
-            .style("fill", "none")
-            .style("pointer-events", "all")
-            .attr('width', width)
-            .attr('height', height)
-            //.on('mouseover', mouseover)
-            //.on('mousemove', mousemove)
-            //.on('mouseout', mouseout);
-
-        // Add the line
-        svg
-            .append("path")
-            .datum(dataset)
-            .attr("fill", "none")
-            .attr("stroke", "steelblue")
-            .attr("stroke-width", 1.5)
-            .attr("d", d3.line()
-                .x(function(d) {
-                    return x(d.x)
-                })
-                .y(function(d) {
-                    return y(d.y)
-                })
-            )
+    // Create a rect on top of the svg area: this rectangle recovers mouse position
+    svg
+        .append('rect')
+        .style("fill", "none")
+        .style("pointer-events", "all")
+        .attr('width', width)
+        .attr('height', height)
+        .on('mouseover', mouseover)
+        .on('mousemove', mousemove)
+        .on('mouseout', mouseout);
 
 
-        // What happens when the mouse move -> show the annotations at the right positions.
-        function mouseover() {
-            focus.style("opacity", 1)
-            focusText.style("opacity",1)
+    // What happens when the mouse move -> show the annotations at the right positions.
+    function mouseover() {
+        focus.style("opacity", 1)
+        focusText.style("opacity", 1)
+    }
+
+    function mousemove() {
+        // recover coordinate we need
+        var x0 = x.invert(d3.mouse(this)[0]);
+        var i = bisect(matchRows, x0, 1);
+        selectedData = matchRows[i]
+        focus
+            .attr("cx", x(selectedData.date))
+            .attr("cy", y(parseInt(selectedData.value) + 1))
+        focusText
+            .html(timeToString(selectedData.date) + ": " + selectedData.value)
+            .attr("x", x(selectedData.date))
+            .attr("y", y(parseInt(selectedData.value) + 1))
+
+        if (x(selectedData.date) >= x(endDate) / 2) {
+            focusText.attr("transform", "translate(" + (-focusText.node().getBBox().width - 13) + "," + 0 + ")");
+        } else {
+            focusText.attr("transform", "translate(" + 13 + "," + 0 + ")");
         }
+    }
 
-        function mousemove() {
-            // recover coordinate we need
-            var x0 = x.invert(d3.mouse(this)[0]);
-            var i = bisect(data, x0, 1);
-            selectedData = data[i]
-            focus
-                .attr("cx", x(selectedData.x))
-                .attr("cy", y(selectedData.y))
-            focusText
-                .html("x:" + selectedData.x + "  -  " + "y:" + selectedData.y)
-                .attr("x", x(selectedData.x)+15)
-                .attr("y", y(selectedData.y))
-        }
-        function mouseout() {
-            focus.style("opacity", 0)
-            focusText.style("opacity", 0)
-        }
-
-    })
+    function mouseout() {
+        focus.style("opacity", 0)
+        focusText.style("opacity", 0)
+    }
 }
 
 d3.csv('/generated/confirmed.csv', dataset => {
@@ -476,7 +491,7 @@ d3.csv('/generated/confirmed.csv', dataset => {
 
 
         displayCountries(svg, path, countries, dataset, minDate)
-        timeSlider(svg, path, countries, dataset, minDate)
+        timeSlider(svg, path, countries, dataset)
         continentZoom('worldButton')
     }
 })
