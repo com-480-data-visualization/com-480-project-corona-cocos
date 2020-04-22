@@ -20,9 +20,11 @@ var svg = d3.select("#map")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
 function continentZoom(idButton) {
-    let x
-    let y
-    let zoom
+    d3.select("#zoomDropdownButton").text("Focus: " + d3.select("#" + idButton).text());
+
+    let x;
+    let y;
+    let zoom;
 
     if (idButton == 'worldButton') {
         zoom = 2
@@ -54,21 +56,21 @@ function continentZoom(idButton) {
         zoom = 3.8
     }
 
-    console.log(x + " " + width)
-    console.log(y + " " + height)
+    //console.log(x + " " + width)
+    //console.log(y + " " + height)
 
     center_x = (width / 2) - (width / (zoom * 2))
     center_y = height / 2 - height / (zoom * 2)
 
-    console.log("cx" + center_x + " cy" + center_y)
+    //console.log("cx" + center_x + " cy" + center_y)
 
     x = -center_x + x
     y = -center_y + y
 
-    console.log('x final ' + x + " y final " + y)
+    //console.log('x final ' + x + " y final " + y)
 
     let s = `scale(${zoom})` + `translate(${x},${y})`
-    console.log("str: " + s)
+    //console.log("str: " + s)
 
     svg.transition()
         .duration(1000)
@@ -156,6 +158,7 @@ function timeSlider(svg, path, countries, dataset) {
 
     slider.insert("g", ".track-overlay")
         .attr("class", "ticks")
+        .attr("class", "whiteContent")
         .attr("transform", "translate(0," + 18 + ")")
         .selectAll("text")
         .data(x.ticks(ticksCount))
@@ -174,6 +177,7 @@ function timeSlider(svg, path, countries, dataset) {
 
     var label = slider.append("text")
         .attr("class", "label")
+        .attr("fill", "white")
         .attr("text-anchor", "middle")
         .text(formatDate(startDate))
         .attr("transform", "translate(0," + (-25) + ")")
@@ -269,6 +273,7 @@ function displayCountries(svg, path, countries, dataset, date) {
         .attr("class", "legendTitle")
         .attr("x", 0)
         .attr("y", 20)
+        .attr("fill", "#FFFFFF")
         .style("text-anchor", "left")
         .text("Legend title");
 
@@ -281,7 +286,6 @@ function displayCountries(svg, path, countries, dataset, date) {
         .style("fill", "url(#linear-gradient)");
 
     //create tick marks
-    console.log(`max ${(max - 1) / 1_000_000}`)
     var xLeg = d3.scaleLog()
         .domain([1 / 1_000_000, (max - 1) / 1_000_000])
         .range([10, 800]) // This is where the axis is placed: from 10 px to 400px
@@ -294,8 +298,9 @@ function displayCountries(svg, path, countries, dataset, date) {
     svgLegend
         .attr("class", "axis")
         .append("g")
-        .attr("transform", "translate(0, 40)")
-        .call(axisLeg);
+        .attr("transform", "translate(0, 45)")
+        .attr("class", "whiteContent")
+        .call(axisLeg)
 
     svg.selectAll(".country")
         .data(countries)
@@ -320,7 +325,7 @@ function updateCountriesColor(svg, path, countries, dataset, date) {
                 const logInfected = Math.log2(parseInt(match[0][date]) / parseInt(match[0]['population']) * 1_000_000 + 1)
                 return hslToHex(0, 1, 1 - logInfected / logMax)
             } else {
-                return hslToHex(180, 1, 50)
+                return "#eab11f"
             }
         })
         .on("click", d => onCountryClicked(d, dataset, date))
@@ -329,7 +334,8 @@ function updateCountriesColor(svg, path, countries, dataset, date) {
 function onCountryClicked(countryData, dataset, date) {
     const name = countryData.properties.name
     const match = dataset.filter(row => row['Country/Region'] === name)[0]
-    if (match.length > 0) {
+    if (!match) {
+        return;
         const infectedRate = parseInt(match[date]) / parseInt(match['population'])
 
         console.log(name)
@@ -348,8 +354,8 @@ function onCountryClicked(countryData, dataset, date) {
     const matchRows = formatMatch(match);
 
     // set the dimensions and margins of the graph
-    var margin = {top: 10, right: 200, bottom: 30, left: 60},
-        width = 630 - margin.left - margin.right,
+    var margin = {top: 10, right: 30, bottom: 30, left: 60},
+        width = 460 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
     // Remove previous graphs
@@ -368,6 +374,7 @@ function onCountryClicked(countryData, dataset, date) {
         .domain([startDate, endDate])
         .range([0, width]);
     svg.append("g")
+        .attr("class", "whiteContent")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x).ticks(ticksCount));
 
@@ -378,6 +385,7 @@ function onCountryClicked(countryData, dataset, date) {
         .domain([1, match[maxDate]])
         .range([height, 0]);
     svg.append("g")
+        .attr("class", "whiteContent")
         .call(d3.axisLeft(y));
 
     // This allows to find the closest X index of the mouse:
@@ -388,21 +396,22 @@ function onCountryClicked(countryData, dataset, date) {
     // Create the circle that travels along the curve of chart
     var focus = svg
         .append('g')
+        .attr("class", "whiteContent")
         .append('circle')
         .style("fill", "red")
-        .attr("stroke", "black")
         .attr('r', 5)
         .style("opacity", 0)
 
     // Create the text that travels along the curve of chart
     var focusText = svg
         .append('g')
+        .attr("class", "whiteContent")
         .append('text')
         .style("opacity", 0)
         .attr("text-anchor", "left")
         .attr("alignment-baseline", "middle")
         .attr("transform",
-            "translate(" + 13 + "," + 0 + ")");
+            "translate(" + 13 + "," + 10 + ")");
 
     // Add the line
     svg
@@ -452,9 +461,9 @@ function onCountryClicked(countryData, dataset, date) {
             .attr("y", y(parseInt(selectedData.value) + 1))
 
         if (x(selectedData.date) >= x(endDate) / 2) {
-            focusText.attr("transform", "translate(" + (-focusText.node().getBBox().width - 13) + "," + 0 + ")");
+            focusText.attr("transform", "translate(" + (-focusText.node().getBBox().width - 13) + "," + 10 + ")");
         } else {
-            focusText.attr("transform", "translate(" + 13 + "," + 0 + ")");
+            focusText.attr("transform", "translate(" + 13 + "," + 10 + ")");
         }
     }
 
@@ -465,11 +474,6 @@ function onCountryClicked(countryData, dataset, date) {
 }
 
 d3.csv('/generated/confirmed.csv', dataset => {
-    console.log(dataset)
-
-    console.log(height);
-    console.log(width);
-
 
     d3.queue()
         .defer(d3.json, "world.topojson")
@@ -482,13 +486,7 @@ d3.csv('/generated/confirmed.csv', dataset => {
         .projection(projection);
 
     function ready(error, data) {
-        console.log('ready')
-
         var countries = topojson.feature(data, data.objects.countries).features;
-        console.log(topojson.feature(data, data.objects.countries))
-
-        console.log(countries);
-
 
         displayCountries(svg, path, countries, dataset, minDate)
         timeSlider(svg, path, countries, dataset)
