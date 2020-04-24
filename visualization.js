@@ -480,6 +480,8 @@ function getDatasetFromName(name) {
 				return data.deaths
 		} else if (data.current_dataset == 'confirmed') {
 				return data.confirmed
+		} else if (data.current_dataset == 'sick') {
+				return data.sick
 		} else {
 				return data.recovered
 		}
@@ -503,6 +505,9 @@ d3.csv('./generated/confirmed.csv', confirmed_data => {
 		})
 		d3.csv('./generated/recovered.csv', recovered_data => {
 				data.recovered = recovered_data
+		})
+		d3.csv('./generated/sick.csv', sick_data => {
+				data.sick = sick_data
 		})
     d3.queue()
         .defer(d3.json, "world.topojson")
