@@ -12,7 +12,7 @@ const margin = {top: 50, left: 50, right: 50, bottom: 50},
     height = 600 - margin.top - margin.bottom,
     width = 1200 - margin.left - margin.right;
 
-var svg = d3.select("#map")
+var map_svg = d3.select("#map")
     .append("svg")
     .attr("height", height + margin.top + margin.bottom)
     .attr("width", width + margin.left + margin.right)
@@ -72,7 +72,7 @@ function continentZoom(idButton) {
     let s = `scale(${zoom})` + `translate(${x},${y})`
     //console.log("str: " + s)
 
-    svg.transition()
+    map_svg.transition()
         .duration(1000)
         .attr('transform', s)
 }
@@ -104,8 +104,8 @@ function hslToHex(h, s, l) {
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-function timeSlider(svg, path, countries, dataset) {
-    var formatDateIntoYearMonth = d3.timeFormat("%b %Y");
+function timeSlider(svg, path, coutries_data) {
+	  var formatDateIntoYearMonth = d3.timeFormat("%b %Y");
     var formatDate = d3.timeFormat("%d %b");
 
     const totalDays = (endDate - startDate) / (1000 * 3600 * 24)
@@ -217,7 +217,9 @@ function timeSlider(svg, path, countries, dataset) {
             .text(formatDate(h));
 
         // Update the map
-        updateCountriesColor(svg, path, countries, dataset, timeToString(h))
+				dataset = getDatasetFromName(data.current_dataset)
+				data.current_date = timeToString(h)
+        updateCountriesColor(map_svg, path, coutries_data, dataset, timeToString(h))
     }
 }
 
@@ -229,7 +231,7 @@ function timeSlider(svg, path, countries, dataset) {
  * @param dataset infected people data
  * @param date
  */
-function displayCountries(svg, path, countries, dataset, date) {
+function displayCountries(svg, path, coutries_data, dataset, date) {
     const max = d3.max(dataset, d => parseInt(d[maxDate]) / parseInt(d['population']) * 1_000_000 + 1);
     const logMax = Math.log2(max)
 
@@ -302,22 +304,22 @@ function displayCountries(svg, path, countries, dataset, date) {
         .attr("class", "whiteContent")
         .call(axisLeg)
 
-    svg.selectAll(".country")
-        .data(countries)
+    map_svg.selectAll(".country")
+        .data(coutries_data)
         .enter().append("path")
         .attr("class", "country")
         .attr("stroke-width", 0.3)
         .attr("stroke", "black")
         .attr("d", path)
 
-    updateCountriesColor(svg, path, countries, dataset, date)
+    updateCountriesColor(map_svg, path, coutries_data, dataset, date)
 }
 
-function updateCountriesColor(svg, path, countries, dataset, date) {
+function updateCountriesColor(svg, path, coutries_data, dataset, date) {
     const max = d3.max(dataset, d => parseInt(d[maxDate]) / parseInt(d['population']) * 1_000_000 + 1);
     const logMax = Math.log2(max)
 
-    svg.selectAll(".country")
+    map_svg.selectAll(".country")
         .attr("fill", (d, _) => {
             const name = d.properties.name
             const match = dataset.filter(row => row['Country/Region'] === name)
@@ -367,7 +369,7 @@ function onCountryClicked(countryData, dataset, date) {
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
     // Add X axis --> it is a date format
     var x = d3.scaleTime()
@@ -473,23 +475,50 @@ function onCountryClicked(countryData, dataset, date) {
     }
 }
 
-d3.csv('./generated/confirmed.csv', dataset => {
+function getDatasetFromName(name) {
+		if (data.current_dataset == 'deaths') {
+				return data.deaths
+		} else if (data.current_dataset == 'confirmed') {
+				return data.confirmed
+		} else {
+				return data.recovered
+		}
+}
 
+function changeDataset(dataset_name) {
+		data.current_dataset = dataset_name
+
+    updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(dataset_name), data.current_date)
+}
+
+const data = {}
+d3.csv('./generated/confirmed.csv', confirmed_data => {
+		data.confirmed = confirmed_data
+		data.current_dataset = 'confirmed'
+
+		d3.csv('./generated/deaths.csv', deaths_data => {
+				data.deaths = deaths_data
+		})
+		d3.csv('./generated/recovered.csv', recovered_data => {
+				data.recovered = recovered_data
+		})
     d3.queue()
         .defer(d3.json, "world.topojson")
         .await(ready)
 
-    var projection = d3.geoMercator()
+    const projection = d3.geoMercator()
         .scale(100);
 
-    var path = d3.geoPath()
+    const world_path = d3.geoPath()
         .projection(projection);
+		data.world_path = world_path
 
-    function ready(error, data) {
-        var countries = topojson.feature(data, data.objects.countries).features;
+    function ready(error, world_data) {
+        const countries_data = topojson.feature(world_data, world_data.objects.countries).features;
+				data.countries_data = countries_data
 
-        displayCountries(svg, path, countries, dataset, minDate)
-        timeSlider(svg, path, countries, dataset)
+        displayCountries(map_svg, world_path, countries_data, confirmed_data, minDate)
+        timeSlider(map_svg, world_path, countries_data, confirmed_data)
         continentZoom('worldButton')
     }
 })
