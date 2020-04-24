@@ -330,17 +330,17 @@ function updateCountriesColor(svg, path, coutries_data, dataset, date) {
                 return "#eab11f"
             }
         })
-        .on("click", d => onCountryClicked(d, dataset, date))
+        .on("click", d => {data.current_country = d.properties.name; plotCountry()})
 }
 
-function onCountryClicked(countryData, dataset, date) {
-    const name = countryData.properties.name
-    const match = dataset.filter(row => row['Country/Region'] === name)[0]
+function plotCountry() {
+		dataset = getDatasetFromName(data.current_dataset)
+    const match = dataset.filter(row => row['Country/Region'] === data.current_country)[0]
     if (!match) {
         return;
         const infectedRate = parseInt(match[date]) / parseInt(match['population'])
 
-        console.log(name)
+        console.log(data.current_country)
         console.log(`${infectedRate * 100}% of population infected`)
         console.log(`${parseInt(match[date])} people infected`)
     }
@@ -488,7 +488,9 @@ function getDatasetFromName(name) {
 function changeDataset(dataset_name) {
 		data.current_dataset = dataset_name
 
+		document.getElementById('datasetDropdownButton').innerHTML = "Data: " + dataset_name
     updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(dataset_name), data.current_date)
+		plotCountry()
 }
 
 const data = {}
