@@ -37,35 +37,43 @@ function continentZoom(idButton) {
     let x;
     let y;
     let zoom;
+    let region;
 
     if (idButton == 'worldButton') {
-        zoom = 2
         x = width / 20
         y = height / 10
+        zoom = 2
+        region = "World"
     } else if (idButton == 'euButton') {
-        zoom = 6
         x = width / 20
         y = height / 4
+        zoom = 6
+        region = "Europe"
     } else if (idButton == 'asiaButton') {
         x = -width / 10
         y = height / 6
         zoom = 3
+        region = "Asia"
     } else if (idButton == 'naButton') {
         x = width / 4.5
         y = height / 5
         zoom = 4.5
+        region = "North America"
     } else if (idButton == 'saButton') {
         x = width / 7
         y = -height / 18
         zoom = 4.2
+        region = "South America"
     } else if (idButton == 'afrButton') {
         x = width / 20
         y = height / 20
         zoom = 3.8
+        region = "Africa"
     } else if (idButton == 'austrButton') {
         x = -width / 7
         y = -height / 15
         zoom = 3.8
+        region = "Australia"
     }
 
     //console.log(x + " " + width)
@@ -87,6 +95,11 @@ function continentZoom(idButton) {
     map_svg.transition()
         .duration(1000)
         .attr('transform', s)
+
+    // Change information to region zoomed
+    data.current_country = region;
+    plotCountry();
+    updateCountryInfo();
 }
 
 function hslToHex(h, s, l) {
@@ -502,7 +515,7 @@ function plotCountry() {
 function getDatasetFromName(name) {
     if (name === 'deaths') {
         return data.deaths;
-    } else if (name=== 'confirmed') {
+    } else if (name === 'confirmed') {
         return data.confirmed;
     } else if (name === 'sick') {
         return data.sick;
