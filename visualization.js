@@ -548,7 +548,7 @@ function changeDataset(dataset_name) {
     data.current_dataset = dataset_name;
 
     document.getElementById('datasetDropdownButton').innerHTML = "Data: " + d3.select("#" + dataset_name).text();
-    updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(), data.current_date);
+    updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(dataset_name), data.current_date);
     displayLegend(data.current_dataset);
     plotCountry();
 }
