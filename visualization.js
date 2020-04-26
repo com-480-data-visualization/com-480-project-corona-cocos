@@ -3,6 +3,7 @@ const maxDate = "2020-04-25";
 const startDate = new Date(minDate);
 const endDate = new Date(maxDate);
 const ticksCount = 5;
+const noDataColor = "#eab11f"
 
 function timeToString(date) {
     return d3.timeFormat("%Y-%m-%d")(date)
@@ -343,6 +344,25 @@ function displayLegend(countriesData) {
         .attr("transform", "translate(0, 45)")
         .call(x2);
 
+    // No data text
+    svgLegend.append("text")
+        .attr("class", "legendTitle")
+        .attr("x", 30)
+        .attr("y", 76)
+        .attr("fill", "#FFFFFF")
+        .style("text-anchor", "left")
+        .text("No data");
+
+    // Square no data color
+    svgLegend.append("rect")
+        .attr("x", 10)
+        .attr("y", 63)
+        .attr("width", 15)
+        .attr("height", 15)
+        .style("stroke-width", 1)
+        .style("stroke", "white")
+        .style("fill", noDataColor);
+
     /*svgLegend.append("g")
         .attr("class", "whiteContent")
         .attr("transform", "translate(0," + 45 + ")")
@@ -361,7 +381,7 @@ function updateCountriesColor(svg, path, coutries_data, dataset, date) {
                 const logInfected = Math.log2(parseInt(match[0][date]) / parseInt(match[0]['population']) * 1_000_000 + 1);
                 return hslToHex(0, 1, 1 - logInfected / logMax);
             } else {
-                return "#eab11f";
+                return noDataColor;
             }
         })
         .on("click", d => {
