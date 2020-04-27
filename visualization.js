@@ -439,11 +439,19 @@ function plotCountry() {
         .call(d3.axisBottom(x).ticks(ticksCount));
 
     // Add Y axis
-    var y = d3
-        //.scaleLinear()
-        .scaleLog().base(2)
-        .domain([1, maxValue])
+    let y;
+
+    if(document.getElementById('radio-log').checked) {
+        // Log
+        y = d3.scaleLog().base(2)
+    } else {
+        // Linear
+        y = d3.scaleLinear()
+    }
+
+    y = y.domain([1, maxValue])
         .range([height, 0]);
+
     svg.append("g")
         .attr("class", "whiteContent")
         .call(d3.axisLeft(y));
