@@ -13,7 +13,7 @@
 **10% of the final grade**
 
 The files for this milestone:
-- [Milestone-1.md](./Milestone-1.md) for all the explanation of the data and the project's goal.
+- [Milestone-1.md](./Milestone-1.md) for all the explanation of the data and the project's goal
 - [eda/EDA.ipynb](./eda/EDA.ipynb)
 
 
@@ -21,7 +21,9 @@ The files for this milestone:
 
 **10% of the final grade**
 
-
+Links for this milestone:
+- [Milestone-2.pdf](./Milestone-2.pdf) report explaining the project's goal
+- [Website](https://com-480-data-visualization.github.io/com-480-project-corona-cocos/) for this project
 
 
 ## Milestone 3 (Thursday 28th May, 5pm)

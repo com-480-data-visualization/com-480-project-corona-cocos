@@ -1,11 +1,24 @@
 const minDate = "2020-01-22";
-const maxDate = "2020-04-23";
+const maxDate = "2020-04-26";
 const startDate = new Date(minDate);
 const endDate = new Date(maxDate);
 const ticksCount = 5;
+const noDataColor = "#eab11f"
 
 function timeToString(date) {
     return d3.timeFormat("%Y-%m-%d")(date)
+}
+
+function formatNumberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function formatMatch(match) {
+    var formatted = []
+    for (var d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        formatted.push({date: new Date(d), value: match[timeToString(d)]});
+    }
+    return formatted
 }
 
 const margin = {top: 50, left: 50, right: 50, bottom: 50},
@@ -25,35 +38,43 @@ function continentZoom(idButton) {
     let x;
     let y;
     let zoom;
+    let region;
 
     if (idButton == 'worldButton') {
-        zoom = 2
         x = width / 20
         y = height / 10
+        zoom = 2
+        region = "World"
     } else if (idButton == 'euButton') {
-        zoom = 6
         x = width / 20
         y = height / 4
+        zoom = 6
+        region = "Europe"
     } else if (idButton == 'asiaButton') {
         x = -width / 11
         y = height / 7
         zoom = 3.8
+        region = "Asia"
     } else if (idButton == 'naButton') {
         x = width / 4.5
         y = height / 6
         zoom = 4.5
+        region = "North America"
     } else if (idButton == 'saButton') {
         x = width / 5.8
         y = -height / 14
         zoom = 4.2
+        region = "South America"
     } else if (idButton == 'afrButton') {
         x = width / 20
         y = height / 20
         zoom = 3.8
-    } else if (idButton == 'austrButton') {
+        region = "Africa"
+    } else if (idButton == 'ocButton') {
         x = -width / 7
         y = -height / 15
         zoom = 5
+        region = "Oceania"
     }
 
 
@@ -68,6 +89,11 @@ function continentZoom(idButton) {
     map_svg.transition()
         .duration(1000)
         .attr('transform', s)
+
+    // Change information to region zoomed
+    data.current_country = region;
+    plotCountry();
+    updateCountryInfo();
 }
 
 function hslToHex(h, s, l) {
@@ -98,7 +124,7 @@ function hslToHex(h, s, l) {
 }
 
 function timeSlider(svg, path, coutries_data) {
-	  var formatDateIntoYearMonth = d3.timeFormat("%b %Y");
+    var formatDateIntoYearMonth = d3.timeFormat("%b %Y");
     var formatDate = d3.timeFormat("%d %b");
 
     const totalDays = (endDate - startDate) / (1000 * 3600 * 24)
@@ -210,9 +236,10 @@ function timeSlider(svg, path, coutries_data) {
             .text(formatDate(h));
 
         // Update the map
-				dataset = getDatasetFromName(data.current_dataset)
-				data.current_date = timeToString(h)
-        updateCountriesColor(map_svg, path, coutries_data, dataset, timeToString(h))
+        dataset = getDatasetFromName(data.current_dataset);
+        data.current_date = timeToString(h);
+        updateCountriesColor(map_svg, path, coutries_data, dataset, timeToString(h));
+        updateCountryInfo();
     }
 }
 
@@ -220,21 +247,35 @@ function timeSlider(svg, path, coutries_data) {
  * Display countries given topojson data and infected people data
  * @param svg to display the map on
  * @param path projection world map (such as Mercator)
- * @param countries topojson data
+ * @param coutries_data topojson data
  * @param dataset infected people data
  * @param date
  */
 function displayCountries(svg, path, coutries_data, dataset, date) {
-    const max = d3.max(dataset, d => parseInt(d[maxDate]) / parseInt(d['population']) * 1_000_000 + 1);
-    const logMax = Math.log2(max)
+    map_svg.selectAll(".country")
+        .data(coutries_data)
+        .enter().append("path")
+        .attr("class", "country")
+        .attr("stroke-width", 0.3)
+        .attr("stroke", "black")
+        .attr("d", path)
 
-    var colorScale = d3.scaleLinear()
-        .domain([0, 100])
-        .range(['#FFFFFF', '#FF0000', '#000000']);
+    updateCountriesColor(map_svg, path, coutries_data, dataset, date)
+}
+
+function displayLegend(countriesData) {
+    // Remove previous graphs
+    d3.select("#legend").selectAll("*").remove();
+
+    dataset = getDatasetFromName(countriesData);
+
+    const max = d3.max(dataset, d => Math.max.apply(Math, formatMatch(d).map(function (o) {
+        return o.value;
+    })) / parseInt(d['population']) * 1_000_000 + 1);
 
     // append a defs (for definition) element to your SVG
     var svgLegend = d3.select("#legend").append('svg')
-        .attr("width", 900);
+        .attr("width", 1200);
     var defs = svgLegend.append('defs');
 
     // append a linearGradient element to the defs and give it a unique id
@@ -270,42 +311,55 @@ function displayCountries(svg, path, coutries_data, dataset, date) {
         .attr("y", 20)
         .attr("fill", "#FFFFFF")
         .style("text-anchor", "left")
-        .text("Legend title");
+        .text("Count relative to country's population");
 
     // draw the rectangle and fill with gradient
     svgLegend.append("rect")
         .attr("x", 10)
         .attr("y", 30)
-        .attr("width", 791)
+        .attr("width", 1191)
         .attr("height", 15)
         .style("fill", "url(#linear-gradient)");
 
+    console.log(max)
     //create tick marks
     var xLeg = d3.scaleLog()
         .domain([1 / 1_000_000, (max - 1) / 1_000_000])
-        .range([10, 800]) // This is where the axis is placed: from 10 px to 400px
-        .base(2)
+        .range([10, 1199]) // This is where the axis is placed: from 10 px to 400px
+        .base(2);
 
 
-    var axisLeg = d3.axisBottom(xLeg)
-        .tickFormat(d3.format(".2s"))
+    var x2 = d3.axisBottom(xLeg).tickFormat(d3.format(".2s"));
 
     svgLegend
-        .attr("class", "axis")
         .append("g")
-        .attr("transform", "translate(0, 45)")
         .attr("class", "whiteContent")
-        .call(axisLeg)
+        .attr("transform", "translate(0, 45)")
+        .call(x2);
 
-    map_svg.selectAll(".country")
-        .data(coutries_data)
-        .enter().append("path")
-        .attr("class", "country")
-        .attr("stroke-width", 0.3)
-        .attr("stroke", "black")
-        .attr("d", path)
+    // No data text
+    svgLegend.append("text")
+        .attr("class", "legendTitle")
+        .attr("x", 30)
+        .attr("y", 76)
+        .attr("fill", "#FFFFFF")
+        .style("text-anchor", "left")
+        .text("No data");
 
-    updateCountriesColor(map_svg, path, coutries_data, dataset, date)
+    // Square no data color
+    svgLegend.append("rect")
+        .attr("x", 10)
+        .attr("y", 63)
+        .attr("width", 15)
+        .attr("height", 15)
+        .style("stroke-width", 1)
+        .style("stroke", "white")
+        .style("fill", noDataColor);
+
+    /*svgLegend.append("g")
+        .attr("class", "whiteContent")
+        .attr("transform", "translate(0," + 45 + ")")
+        .call(d3.axisBottom(x).ticks(ticksCount));*/
 }
 
 function updateCountriesColor(svg, path, coutries_data, dataset, date) {
@@ -314,39 +368,43 @@ function updateCountriesColor(svg, path, coutries_data, dataset, date) {
 
     map_svg.selectAll(".country")
         .attr("fill", (d, _) => {
-            const name = d.properties.name
-            const match = dataset.filter(row => row['Country/Region'] === name)
+            const name = d.properties.name;
+            const match = dataset.filter(row => row['Country/Region'] === name);
             if (match.length > 0) {
-                const logInfected = Math.log2(parseInt(match[0][date]) / parseInt(match[0]['population']) * 1_000_000 + 1)
-                return hslToHex(0, 1, 1 - logInfected / logMax)
+                const logInfected = Math.log2(parseInt(match[0][date]) / parseInt(match[0]['population']) * 1_000_000 + 1);
+                return hslToHex(0, 1, 1 - logInfected / logMax);
             } else {
-                return "#eab11f"
+                return noDataColor;
             }
         })
-        .on("click", d => {data.current_country = d.properties.name; plotCountry()})
+        .on("click", d => {
+            data.current_country = d.properties.name;
+            plotCountry();
+            updateCountryInfo();
+        })
+}
+
+function updateCountryInfo() {
+    d3.select("#info_country_name").text(data.current_country)
+    d3.select("#info_country_confirmed").text("Confirmed: "
+        + formatNumberWithCommas(getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.current_country)[0][data.current_date]))
+    d3.select("#info_country_deaths").text("Deaths: "
+        + formatNumberWithCommas(getDatasetFromName('deaths').filter(row => row['Country/Region'] === data.current_country)[0][data.current_date]))
+    d3.select("#info_country_recovered").text("Recovered: "
+        + formatNumberWithCommas(getDatasetFromName('recovered').filter(row => row['Country/Region'] === data.current_country)[0][data.current_date]))
+    d3.select("#info_country_active_cases").text("Active cases: "
+        + formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.current_country)[0][data.current_date]))
 }
 
 function plotCountry() {
-		dataset = getDatasetFromName(data.current_dataset)
+    dataset = getDatasetFromName(data.current_dataset)
     const match = dataset.filter(row => row['Country/Region'] === data.current_country)[0]
-    if (!match) {
-        return;
-        const infectedRate = parseInt(match[date]) / parseInt(match['population'])
-
-        console.log(data.current_country)
-        console.log(`${infectedRate * 100}% of population infected`)
-        console.log(`${parseInt(match[date])} people infected`)
-    }
-
-    function formatMatch(match) {
-        var formatted = []
-        for (var d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-            formatted.push({date: new Date(d), value: match[timeToString(d)]});
-        }
-        return formatted
-    }
 
     const matchRows = formatMatch(match);
+
+    const maxValue = Math.max.apply(Math, matchRows.map(function (o) {
+        return o.value;
+    }));
 
     // set the dimensions and margins of the graph
     var margin = {top: 10, right: 30, bottom: 30, left: 60},
@@ -362,7 +420,7 @@ function plotCountry() {
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // Add X axis --> it is a date format
     var x = d3.scaleTime()
@@ -374,11 +432,19 @@ function plotCountry() {
         .call(d3.axisBottom(x).ticks(ticksCount));
 
     // Add Y axis
-    var y = d3
-        //.scaleLinear()
-        .scaleLog().base(2)
-        .domain([1, match[maxDate]])
+    let y;
+
+    if(document.getElementById('radio-log').checked) {
+        // Log
+        y = d3.scaleLog().base(2)
+    } else {
+        // Linear
+        y = d3.scaleLinear()
+    }
+
+    y = y.domain([1, maxValue])
         .range([height, 0]);
+
     svg.append("g")
         .attr("class", "whiteContent")
         .call(d3.axisLeft(y));
@@ -387,6 +453,21 @@ function plotCountry() {
     var bisect = d3.bisector(function (d) {
         return d.date;
     }).left;
+
+    // Add the line
+    svg.append("path")
+        .datum(matchRows)
+        .attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", 1.5)
+        .attr("d", d3.line()
+            .x(function (d) {
+                return x(d.date)
+            })
+            .y(function (d) {
+                return y(parseInt(d.value) + 1)
+            })
+        );
 
     // Create the circle that travels along the curve of chart
     var focus = svg
@@ -408,22 +489,6 @@ function plotCountry() {
         .attr("transform",
             "translate(" + 13 + "," + 10 + ")");
 
-    // Add the line
-    svg
-        .append("path")
-        .datum(matchRows)
-        .attr("fill", "none")
-        .attr("stroke", "steelblue")
-        .attr("stroke-width", 1.5)
-        .attr("d", d3.line()
-            .x(function (d) {
-                return x(d.date)
-            })
-            .y(function (d) {
-                return y(parseInt(d.value) + 1)
-            })
-        )
-
     // Create a rect on top of the svg area: this rectangle recovers mouse position
     svg
         .append('rect')
@@ -438,22 +503,22 @@ function plotCountry() {
 
     // What happens when the mouse move -> show the annotations at the right positions.
     function mouseover() {
-        focus.style("opacity", 1)
-        focusText.style("opacity", 1)
+        focus.style("opacity", 1);
+        focusText.style("opacity", 1);
     }
 
     function mousemove() {
         // recover coordinate we need
         var x0 = x.invert(d3.mouse(this)[0]);
         var i = bisect(matchRows, x0, 1);
-        selectedData = matchRows[i]
+        selectedData = matchRows[i];
         focus
             .attr("cx", x(selectedData.date))
-            .attr("cy", y(parseInt(selectedData.value) + 1))
+            .attr("cy", y(parseInt(selectedData.value) + 1));
         focusText
-            .html(timeToString(selectedData.date) + ": " + selectedData.value)
+            .html(d3.timeFormat("%d %b")(selectedData.date) + ": " + formatNumberWithCommas(selectedData.value))
             .attr("x", x(selectedData.date))
-            .attr("y", y(parseInt(selectedData.value) + 1))
+            .attr("y", y(parseInt(selectedData.value) + 1));
 
         if (x(selectedData.date) >= x(endDate) / 2) {
             focusText.attr("transform", "translate(" + (-focusText.node().getBBox().width - 13) + "," + 10 + ")");
@@ -463,45 +528,53 @@ function plotCountry() {
     }
 
     function mouseout() {
-        focus.style("opacity", 0)
-        focusText.style("opacity", 0)
+        focus.style("opacity", 0);
+        focusText.style("opacity", 0);
     }
 }
 
 function getDatasetFromName(name) {
-		if (data.current_dataset == 'deaths') {
-				return data.deaths
-		} else if (data.current_dataset == 'confirmed') {
-				return data.confirmed
-		} else if (data.current_dataset == 'sick') {
-				return data.sick
-		} else {
-				return data.recovered
-		}
+    if (name === 'deaths') {
+        return data.deaths;
+    } else if (name === 'confirmed') {
+        return data.confirmed;
+    } else if (name === 'sick') {
+        return data.sick;
+    } else if (name === 'daily') {
+        return data.daily;
+    } else {
+        return data.recovered;
+    }
 }
 
 function changeDataset(dataset_name) {
-		data.current_dataset = dataset_name
+    data.current_dataset = dataset_name;
 
-		document.getElementById('datasetDropdownButton').innerHTML = "Data: " + dataset_name
-    updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(dataset_name), data.current_date)
-		plotCountry()
+    document.getElementById('datasetDropdownButton').innerHTML = "Data: " + d3.select("#" + dataset_name).text();
+    updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(dataset_name), data.current_date);
+    displayLegend(data.current_dataset);
+    plotCountry();
 }
 
 const data = {}
 d3.csv('./generated/confirmed.csv', confirmed_data => {
-		data.confirmed = confirmed_data
-		data.current_dataset = 'confirmed'
+    data.confirmed = confirmed_data;
+    data.current_dataset = 'confirmed';
+    data.current_date = minDate;
+    data.current_country = "World";
 
-		d3.csv('./generated/deaths.csv', deaths_data => {
-				data.deaths = deaths_data
-		})
-		d3.csv('./generated/recovered.csv', recovered_data => {
-				data.recovered = recovered_data
-		})
-		d3.csv('./generated/sick.csv', sick_data => {
-				data.sick = sick_data
-		})
+    d3.csv('./generated/deaths.csv', deaths_data => {
+        data.deaths = deaths_data;
+    })
+    d3.csv('./generated/recovered.csv', recovered_data => {
+        data.recovered = recovered_data;
+    })
+    d3.csv('./generated/sick.csv', sick_data => {
+        data.sick = sick_data;
+    })
+    d3.csv('./generated/daily.csv', daily_data => {
+        data.daily = daily_data;
+    })
     d3.queue()
         .defer(d3.json, "world.topojson")
         .await(ready)
@@ -511,14 +584,17 @@ d3.csv('./generated/confirmed.csv', confirmed_data => {
 
     const world_path = d3.geoPath()
         .projection(projection);
-		data.world_path = world_path
+    data.world_path = world_path
 
     function ready(error, world_data) {
         const countries_data = topojson.feature(world_data, world_data.objects.countries).features;
-				data.countries_data = countries_data
+        data.countries_data = countries_data;
 
-        displayCountries(map_svg, world_path, countries_data, confirmed_data, minDate)
-        timeSlider(map_svg, world_path, countries_data, confirmed_data)
-        continentZoom('worldButton')
+        displayCountries(map_svg, world_path, countries_data, confirmed_data, minDate);
+        displayLegend(countries_data);
+        timeSlider(map_svg, world_path, countries_data, confirmed_data);
+        continentZoom('worldButton');
+        plotCountry();
+        updateCountryInfo();
     }
 })
