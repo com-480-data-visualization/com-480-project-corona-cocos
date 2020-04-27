@@ -5,6 +5,9 @@ import re
 
 
 def scrape_population():
+    """
+    Scrape population of each country from Wikipedia and write to csv file
+    """
     rows = [['name', 'population'], ['Kosovo', '1920079'], ['Sao Tome and Principe', '211028']]
     URL = 'https://en.wikipedia.org/wiki/List_of_countries_by_population_(United_Nations)'
     page = requests.get(URL)
