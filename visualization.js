@@ -1,5 +1,5 @@
 const minDate = "2020-01-22";
-const maxDate = "2020-04-25";
+const maxDate = "2020-04-26";
 const startDate = new Date(minDate);
 const endDate = new Date(maxDate);
 const ticksCount = 5;
@@ -547,6 +547,8 @@ function getDatasetFromName(name) {
         return data.confirmed;
     } else if (name === 'sick') {
         return data.sick;
+    } else if (name === 'daily') {
+        return data.daily;
     } else {
         return data.recovered;
     }
@@ -576,6 +578,9 @@ d3.csv('./generated/confirmed.csv', confirmed_data => {
     })
     d3.csv('./generated/sick.csv', sick_data => {
         data.sick = sick_data;
+    })
+    d3.csv('./generated/daily.csv', daily_data => {
+        data.daily = daily_data;
     })
     d3.queue()
         .defer(d3.json, "world.topojson")
