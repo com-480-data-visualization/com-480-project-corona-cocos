@@ -70,11 +70,11 @@ function continentZoom(idButton) {
         y = height / 20
         zoom = 3.8
         region = "Africa"
-    } else if (idButton == 'austrButton') {
+    } else if (idButton == 'ocButton') {
         x = -width / 7
         y = -height / 15
         zoom = 3.8
-        region = "Australia"
+        region = "Oceania"
     }
 
     //console.log(x + " " + width)
