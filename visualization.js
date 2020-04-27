@@ -35,16 +35,16 @@ function continentZoom(idButton) {
         x = width / 20
         y = height / 4
     } else if (idButton == 'asiaButton') {
-        x = -width / 10
-        y = height / 6
-        zoom = 3
+        x = -width / 11
+        y = height / 7
+        zoom = 3.8
     } else if (idButton == 'naButton') {
         x = width / 4.5
-        y = height / 5
+        y = height / 6
         zoom = 4.5
     } else if (idButton == 'saButton') {
-        x = width / 7
-        y = -height / 18
+        x = width / 5.8
+        y = -height / 14
         zoom = 4.2
     } else if (idButton == 'afrButton') {
         x = width / 20
@@ -53,24 +53,17 @@ function continentZoom(idButton) {
     } else if (idButton == 'austrButton') {
         x = -width / 7
         y = -height / 15
-        zoom = 3.8
+        zoom = 5
     }
 
-    //console.log(x + " " + width)
-    //console.log(y + " " + height)
 
     center_x = (width / 2) - (width / (zoom * 2))
     center_y = height / 2 - height / (zoom * 2)
 
-    //console.log("cx" + center_x + " cy" + center_y)
-
     x = -center_x + x
     y = -center_y + y
 
-    //console.log('x final ' + x + " y final " + y)
-
     let s = `scale(${zoom})` + `translate(${x},${y})`
-    //console.log("str: " + s)
 
     map_svg.transition()
         .duration(1000)
