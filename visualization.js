@@ -1,9 +1,11 @@
-const minDate = "2020-01-22";
+const minDate = "2020-01-23";
 const maxDate = "2020-05-09";
 const startDate = new Date(minDate);
 const endDate = new Date(maxDate);
 const ticksCount = 5;
-const noDataColor = "#eab11f"
+const noDataColor = "#eab11f";
+var lastReplacedCountry = 2;
+var redrawGraphPoints = null;
 
 function timeToString(date) {
     return d3.timeFormat("%Y-%m-%d")(date)
@@ -91,7 +93,13 @@ function continentZoom(idButton) {
         .attr('transform', s)
 
     // Change information to region zoomed
-    data.current_country = region;
+    if(lastReplacedCountry == 1){
+        data.country_2 = region;
+        lastReplacedCountry = 2;
+    }else{
+        lastReplacedCountry = 1;
+        data.country_1 = region;
+    }
     plotCountry();
     updateCountryInfo();
 }
@@ -366,6 +374,11 @@ function updateCountriesColor(svg, path, coutries_data, dataset, date) {
     const max = d3.max(dataset, d => parseInt(d[maxDate]) / parseInt(d['population']) * 1_000_000 + 1);
     const logMax = Math.log2(max)
 
+    // Update moving reds dots on the graph if defined
+    if(redrawGraphPoints != null){
+        redrawGraphPoints();
+    }
+
     map_svg.selectAll(".country")
         .attr("fill", (d, _) => {
             const name = d.properties.name;
@@ -378,33 +391,55 @@ function updateCountriesColor(svg, path, coutries_data, dataset, date) {
             }
         })
         .on("click", d => {
-            data.current_country = d.properties.name;
+            if(lastReplacedCountry == 1){
+                data.country_2 = d.properties.name;
+                lastReplacedCountry = 2;
+            }else{
+                lastReplacedCountry = 1;
+                data.country_1 = d.properties.name;
+            }
+
             plotCountry();
             updateCountryInfo();
         })
 }
 
 function updateCountryInfo() {
-    d3.select("#info_country_name").text(data.current_country)
-    d3.select("#info_country_confirmed").text("Confirmed: "
-        + formatNumberWithCommas(getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.current_country)[0][data.current_date]))
-    d3.select("#info_country_deaths").text("Deaths: "
-        + formatNumberWithCommas(getDatasetFromName('deaths').filter(row => row['Country/Region'] === data.current_country)[0][data.current_date]))
-    d3.select("#info_country_recovered").text("Recovered: "
-        + formatNumberWithCommas(getDatasetFromName('recovered').filter(row => row['Country/Region'] === data.current_country)[0][data.current_date]))
-    d3.select("#info_country_active_cases").text("Active cases: "
-        + formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.current_country)[0][data.current_date]))
+    d3.select("#info_country1_name").text(data.country_1)
+    d3.select("#info_country1_confirmed").text("Confirmed: "
+        + formatNumberWithCommas(getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
+    d3.select("#info_country1_deaths").text("Deaths: "
+        + formatNumberWithCommas(getDatasetFromName('deaths').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
+    d3.select("#info_country1_recovered").text("Recovered: "
+        + formatNumberWithCommas(getDatasetFromName('recovered').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
+    d3.select("#info_country1_active_cases").text("Active cases: "
+        + formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
+
+    d3.select("#info_country2_name").text(data.country_2)
+    d3.select("#info_country2_confirmed").text("Confirmed: "
+        + formatNumberWithCommas(getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
+    d3.select("#info_country2_deaths").text("Deaths: "
+        + formatNumberWithCommas(getDatasetFromName('deaths').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
+    d3.select("#info_country2_recovered").text("Recovered: "
+        + formatNumberWithCommas(getDatasetFromName('recovered').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
+    d3.select("#info_country2_active_cases").text("Active cases: "
+        + formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
 }
 
 function plotCountry() {
-    dataset = getDatasetFromName(data.current_dataset)
-    const match = dataset.filter(row => row['Country/Region'] === data.current_country)[0]
+    dataset = getDatasetFromName(data.current_dataset);
 
-    const matchRows = formatMatch(match);
+    const matchRowsCountry1 = formatMatch(dataset.filter(row => row['Country/Region'] === data.country_1)[0]);
+    const matchRowsCountry2 = formatMatch(dataset.filter(row => row['Country/Region'] === data.country_2)[0]);
 
-    const maxValue = Math.max.apply(Math, matchRows.map(function (o) {
-        return o.value;
-    }));
+    const maxValue = Math.max(
+        Math.max.apply(Math, matchRowsCountry1.map(function (o) {
+            return o.value;
+        })),
+        Math.max.apply(Math, matchRowsCountry2.map(function (o) {
+            return o.value;
+        }))
+    );
 
     // set the dimensions and margins of the graph
     var margin = {top: 10, right: 30, bottom: 30, left: 60},
@@ -456,7 +491,7 @@ function plotCountry() {
 
     // Add the line
     svg.append("path")
-        .datum(matchRows)
+        .datum(matchRowsCountry1)
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
@@ -470,20 +505,55 @@ function plotCountry() {
         );
 
     // Create the circle that travels along the curve of chart
-    var focus = svg
+    var focus1 = svg
         .append('g')
         .attr("class", "whiteContent")
         .append('circle')
-        .style("fill", "red")
+        .style("fill", "steelblue")
         .attr('r', 5)
-        .style("opacity", 0)
+        .style("opacity", 1)
 
     // Create the text that travels along the curve of chart
-    var focusText = svg
+    var focusText1 = svg
         .append('g')
         .attr("class", "whiteContent")
         .append('text')
-        .style("opacity", 0)
+        .style("opacity", 1)
+        .attr("text-anchor", "left")
+        .attr("alignment-baseline", "middle")
+        .attr("transform",
+            "translate(" + 13 + "," + 10 + ")");
+
+    // Add the line
+    svg.append("path")
+    .datum(matchRowsCountry2)
+    .attr("fill", "none")
+    .attr("stroke", "darkorange")
+    .attr("stroke-width", 1.5)
+    .attr("d", d3.line()
+        .x(function (d) {
+            return x(d.date)
+        })
+        .y(function (d) {
+            return y(parseInt(d.value) + 1)
+        })
+    );
+
+    // Create the circle that travels along the curve of chart
+    var focus2 = svg
+        .append('g')
+        .attr("class", "whiteContent")
+        .append('circle')
+        .style("fill", "darkorange")
+        .attr('r', 5)
+        .style("opacity", 1)
+
+    // Create the text that travels along the curve of chart
+    var focusText2 = svg
+        .append('g')
+        .attr("class", "whiteContent")
+        .append('text')
+        .style("opacity", 1)
         .attr("text-anchor", "left")
         .attr("alignment-baseline", "middle")
         .attr("transform",
@@ -503,34 +573,69 @@ function plotCountry() {
 
     // What happens when the mouse move -> show the annotations at the right positions.
     function mouseover() {
-        focus.style("opacity", 1);
-        focusText.style("opacity", 1);
+        // focus1.style("opacity", 1);
+        // focusText1.style("opacity", 1);
+        // focus2.style("opacity", 1);
+        // focusText2.style("opacity", 1);
     }
 
+    var previousDate = null;
     function mousemove() {
-        // recover coordinate we need
         var x0 = x.invert(d3.mouse(this)[0]);
-        var i = bisect(matchRows, x0, 1);
-        selectedData = matchRows[i];
-        focus
-            .attr("cx", x(selectedData.date))
-            .attr("cy", y(parseInt(selectedData.value) + 1));
-        focusText
-            .html(d3.timeFormat("%d %b")(selectedData.date) + ": " + formatNumberWithCommas(selectedData.value))
-            .attr("x", x(selectedData.date))
-            .attr("y", y(parseInt(selectedData.value) + 1));
+        var i = bisect(matchRowsCountry1, x0, 1);
+        selectedData = matchRowsCountry1[i];
 
-        if (x(selectedData.date) >= x(endDate) / 2) {
-            focusText.attr("transform", "translate(" + (-focusText.node().getBBox().width - 13) + "," + 10 + ")");
-        } else {
-            focusText.attr("transform", "translate(" + 13 + "," + 10 + ")");
+        // Update current date to display
+        var date = timeToString(selectedData.date);
+        if(previousDate != date){
+            previousDate = date;
+            data.current_date = date;
+            updateCountriesColor(map_svg, data.world_path, data.countries_data, dataset, date);
+            updateCountryInfo();
         }
     }
 
     function mouseout() {
-        focus.style("opacity", 0);
-        focusText.style("opacity", 0);
+        // focus1.style("opacity", 0);
+        // focusText1.style("opacity", 0);
+        // focus2.style("opacity", 0);
+        // focusText2.style("opacity", 0);
     }
+
+    redrawGraphPoints = _ => {
+        const date = new Date(data.current_date);
+        var i = bisect(matchRowsCountry1, date, 1);
+        selectedData = matchRowsCountry1[i];
+
+        country1Val = parseInt(selectedData.value) + 1;
+        focus1
+            .attr("cx", x(selectedData.date))
+            .attr("cy", y(country1Val));
+        focusText1
+            .html(data.country_1 + ", " + d3.timeFormat("%d %b")(selectedData.date) + ": " + formatNumberWithCommas(selectedData.value))
+            .attr("x", x(selectedData.date))
+            .attr("y", y(parseInt(selectedData.value) + 1));
+        selectedData = matchRowsCountry2[i];
+        country2Val = parseInt(selectedData.value) + 1;
+        focus2
+            .attr("cx", x(selectedData.date))
+            .attr("cy", y(country2Val));
+        focusText2
+            .html(data.country_2 + ", " + d3.timeFormat("%d %b")(selectedData.date) + ": " + formatNumberWithCommas(selectedData.value))
+            .attr("x", x(selectedData.date))
+            .attr("y", y(parseInt(selectedData.value) + 1));
+
+        const signX = country2Val > country1Val ? 1 : -1;
+
+        if (i >= matchRowsCountry1.length/2) {
+            focusText1.attr("transform", "translate(" + (-focusText1.node().getBBox().width - 13) + "," + signX * 10 + ")");
+            focusText2.attr("transform", "translate(" + (-focusText2.node().getBBox().width - 13) + "," + signX * -10 + ")");
+        } else {
+            focusText1.attr("transform", "translate(" + 13 + "," + signX * 10 + ")");
+            focusText2.attr("transform", "translate(" + 13 + "," + signX * -10 + ")");
+        }
+    }
+    redrawGraphPoints();
 }
 
 function getDatasetFromName(name) {
@@ -561,7 +666,8 @@ d3.csv('./generated/confirmed.csv', confirmed_data => {
     data.confirmed = confirmed_data;
     data.current_dataset = 'confirmed';
     data.current_date = minDate;
-    data.current_country = "World";
+    data.country_1 = "World";
+    data.country_2 = "Switzerland";
 
     d3.csv('./generated/deaths.csv', deaths_data => {
         data.deaths = deaths_data;
