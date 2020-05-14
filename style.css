@@ -46,7 +46,7 @@ body {
 	z-index: 10;
 	cursor: default;
 	visibility: hidden;
-	background-color: white;
+	background-color: rgba(255, 255, 255, 0.85);
 	padding: 0.5rem;
 	border-radius: 1rem;
 	box-shadow: 0px 0px 0.7rem black;
