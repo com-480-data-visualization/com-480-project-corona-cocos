@@ -248,6 +248,7 @@ function timeSlider(svg, path, coutries_data) {
         data.current_date = timeToString(h);
         updateCountriesColor(map_svg, path, coutries_data, dataset, timeToString(h));
         updateCountryInfo();
+        updateInfoBox();
     }
 }
 
@@ -382,12 +383,16 @@ function updateCountriesColor(svg, path, coutries_data, dataset, date) {
     map_svg.selectAll(".country")
         .attr("fill", (d, _) => {
             const name = d.properties.name;
-            const match = dataset.filter(row => row['Country/Region'] === name);
-            if (match.length > 0) {
-                const logInfected = Math.log2(parseInt(match[0][date]) / parseInt(match[0]['population']) * 1_000_000 + 1);
-                return hslToHex(0, 1, 1 - logInfected / logMax);
+            if (name === data.hover_country) {
+                return "#9370DB"
             } else {
-                return noDataColor;
+                const match = dataset.filter(row => row['Country/Region'] === name);
+                if (match.length > 0) {
+                    const logInfected = Math.log2(parseInt(match[0][date]) / parseInt(match[0]['population']) * 1_000_000 + 1);
+                    return hslToHex(0, 1, 1 - logInfected / logMax);
+                } else {
+                    return noDataColor;
+                }
             }
         })
         .on("click", d => {
@@ -402,6 +407,46 @@ function updateCountriesColor(svg, path, coutries_data, dataset, date) {
             plotCountry();
             updateCountryInfo();
         })
+        .on("mouseover", d => {
+            mouseOverCountry(d.properties.name)
+        })
+        .on("mouseout", d => {
+            mouseOutCountry(d.properties.name)
+        })
+}
+
+function updateInfoBox() {
+    d3.select("#info_box_name").text(data.hover_country).style("font-weight", "bold")
+    if (getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.hover_country).length > 0) {
+        d3.select("#info_box_confirmed").text("Confirmed: "
+            + formatNumberWithCommas(getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.hover_country)[0][data.current_date]))
+        d3.select("#info_box_deaths").text("Deaths: "
+            + formatNumberWithCommas(getDatasetFromName('deaths').filter(row => row['Country/Region'] === data.hover_country)[0][data.current_date]))
+        d3.select("#info_box_recovered").text("Recovered: "
+            + formatNumberWithCommas(getDatasetFromName('recovered').filter(row => row['Country/Region'] === data.hover_country)[0][data.current_date]))
+        d3.select("#info_box_active_cases").text("Active cases: "
+            + formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.hover_country)[0][data.current_date]))
+    } else {
+        d3.select("#info_box_confirmed").text("No data")
+        d3.select("#info_box_deaths").text("")
+        d3.select("#info_box_recovered").text("")
+        d3.select("#info_box_active_cases").text("")
+    }
+}
+
+function mouseOverCountry(country) {
+    data.hover_country = country
+    d3.select("#info_box").style("visibility", "visible")
+    updateInfoBox()
+    updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(data.current_dataset), data.current_date);
+}
+
+function mouseOutCountry(country) {
+    if (data.hover_country === country) {
+        data.hover_country = ""
+    }
+    d3.select("#info_box").style("visibility", "hidden")
+    updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(data.current_dataset), data.current_date);
 }
 
 function updateCountryInfo() {
@@ -660,6 +705,15 @@ function changeDataset(dataset_name) {
     displayLegend(data.current_dataset);
     plotCountry();
 }
+
+$(document).mousemove(function(e){
+    var width = document.getElementById('info_box').offsetWidth;
+    var height = document.getElementById('info_box').offsetHeight;
+    var left = e.pageX - width/2
+    var top = e.pageY - height - 8
+
+    $("#info_box").css({left:left, top:top});
+});
 
 const data = {}
 d3.csv('./generated/confirmed.csv', confirmed_data => {
