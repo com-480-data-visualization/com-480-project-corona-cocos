@@ -280,7 +280,7 @@ function displayLegend(countriesData) {
 
     const max = d3.max(dataset, d => Math.max.apply(Math, formatMatch(d).map(function (o) {
         return o.value;
-    })) / parseInt(d['population']) * 1_000_000 + 1);
+    })) / parseInt(d['population']) * 1000000 + 1);
 
     // append a defs (for definition) element to your SVG
     var svgLegend = d3.select("#legend").append('svg')
@@ -333,7 +333,7 @@ function displayLegend(countriesData) {
     console.log(max)
     //create tick marks
     var xLeg = d3.scaleLog()
-        .domain([1 / 1_000_000, (max - 1) / 1_000_000])
+        .domain([1 / 1000000, (max - 1) / 1000000])
         .range([10, 1199]) // This is where the axis is placed: from 10 px to 400px
         .base(2);
 
@@ -372,7 +372,7 @@ function displayLegend(countriesData) {
 }
 
 function updateCountriesColor(svg, path, coutries_data, dataset, date) {
-    const max = d3.max(dataset, d => parseInt(d[maxDate]) / parseInt(d['population']) * 1_000_000 + 1);
+    const max = d3.max(dataset, d => parseInt(d[maxDate]) / parseInt(d['population']) * 1000000 + 1);
     const logMax = Math.log2(max)
 
     // Update moving reds dots on the graph if defined
@@ -388,7 +388,7 @@ function updateCountriesColor(svg, path, coutries_data, dataset, date) {
             } else {
                 const match = dataset.filter(row => row['Country/Region'] === name);
                 if (match.length > 0) {
-                    const logInfected = Math.log2(parseInt(match[0][date]) / parseInt(match[0]['population']) * 1_000_000 + 1);
+                    const logInfected = Math.log2(parseInt(match[0][date]) / parseInt(match[0]['population']) * 1000000 + 1);
                     return hslToHex(0, 1, 1 - logInfected / logMax);
                 } else {
                     return noDataColor;
