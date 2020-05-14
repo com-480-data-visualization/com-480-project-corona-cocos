@@ -27,6 +27,7 @@ def scrape_population():
         name = name.replace('Republic of Ireland', 'Ireland')
         name = re.sub('^Republic of the Congo', 'Congo', name)
         name = name.replace('East Timor', 'Timor-Leste')
+        name = name.replace('Falkland Islands', 'Falkland Islands (Malvinas)')
 
         if name == 'Serbia':
             # Remove Kosovo population
