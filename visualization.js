@@ -397,23 +397,28 @@ function updateCountriesColor(svg, path, coutries_data, dataset, date) {
 
 function updateInfoBox() {
     d3.select("#info_box_name").text(data.hover_country).style("font-weight", "bold")
-    d3.select("#info_box_confirmed").text("Confirmed: "
-        + formatNumberWithCommas(getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.hover_country)[0][data.current_date]))
-    d3.select("#info_box_deaths").text("Deaths: "
-        + formatNumberWithCommas(getDatasetFromName('deaths').filter(row => row['Country/Region'] === data.hover_country)[0][data.current_date]))
-    d3.select("#info_box_recovered").text("Recovered: "
-        + formatNumberWithCommas(getDatasetFromName('recovered').filter(row => row['Country/Region'] === data.hover_country)[0][data.current_date]))
-    d3.select("#info_box_active_cases").text("Active cases: "
-        + formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.hover_country)[0][data.current_date]))
+    if (getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.hover_country).length > 0) {
+        d3.select("#info_box_confirmed").text("Confirmed: "
+            + formatNumberWithCommas(getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.hover_country)[0][data.current_date]))
+        d3.select("#info_box_deaths").text("Deaths: "
+            + formatNumberWithCommas(getDatasetFromName('deaths').filter(row => row['Country/Region'] === data.hover_country)[0][data.current_date]))
+        d3.select("#info_box_recovered").text("Recovered: "
+            + formatNumberWithCommas(getDatasetFromName('recovered').filter(row => row['Country/Region'] === data.hover_country)[0][data.current_date]))
+        d3.select("#info_box_active_cases").text("Active cases: "
+            + formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.hover_country)[0][data.current_date]))
+    } else {
+        d3.select("#info_box_confirmed").text("No data")
+        d3.select("#info_box_deaths").text("")
+        d3.select("#info_box_recovered").text("")
+        d3.select("#info_box_active_cases").text("")
+    }
 }
 
 function mouseOverCountry(country) {
-    if (getDatasetFromName('confirmed').filter(row => row['Country/Region'] === country).length > 0) {
-        data.hover_country = country
-        d3.select("#info_box").style("visibility", "visible")
-        updateInfoBox()
-        updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(data.current_dataset), data.current_date);
-    }
+    data.hover_country = country
+    d3.select("#info_box").style("visibility", "visible")
+    updateInfoBox()
+    updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(data.current_dataset), data.current_date);
 }
 
 function mouseOutCountry(country) {
