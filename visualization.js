@@ -706,13 +706,14 @@ function changeDataset(dataset_name) {
     plotCountry();
 }
 
-$(document).mousemove(function(e){
+window.addEventListener('mousemove', function(e){
     var width = document.getElementById('info_box').offsetWidth;
     var height = document.getElementById('info_box').offsetHeight;
     var left = e.pageX - width/2
     var top = e.pageY - height - 8
 
-    $("#info_box").css({left:left, top:top});
+    document.getElementById('info_box').style.left = `${left}px`
+    document.getElementById('info_box').style.top = `${top}px`
 });
 
 const data = {}
