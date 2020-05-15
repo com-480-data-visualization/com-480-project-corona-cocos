@@ -464,24 +464,16 @@ function mouseOutCountry(country) {
 
 function updateCountryInfo() {
     d3.select("#info_country1_name").text(data.country_1)
-    d3.select("#info_country1_confirmed").text("Confirmed: "
-        + formatNumberWithCommas(getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
-    d3.select("#info_country1_deaths").text("Deaths: "
-        + formatNumberWithCommas(getDatasetFromName('deaths').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
-    d3.select("#info_country1_recovered").text("Recovered: "
-        + formatNumberWithCommas(getDatasetFromName('recovered').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
-    d3.select("#info_country1_active_cases").text("Active cases: "
-        + formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
+    d3.select("#info_country1_confirmed").text(formatNumberWithCommas(getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
+    d3.select("#info_country1_deaths").text(formatNumberWithCommas(getDatasetFromName('deaths').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
+    d3.select("#info_country1_recovered").text(formatNumberWithCommas(getDatasetFromName('recovered').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
+    d3.select("#info_country1_active_cases").text(formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
 
     d3.select("#info_country2_name").text(data.country_2)
-    d3.select("#info_country2_confirmed").text("Confirmed: "
-        + formatNumberWithCommas(getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
-    d3.select("#info_country2_deaths").text("Deaths: "
-        + formatNumberWithCommas(getDatasetFromName('deaths').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
-    d3.select("#info_country2_recovered").text("Recovered: "
-        + formatNumberWithCommas(getDatasetFromName('recovered').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
-    d3.select("#info_country2_active_cases").text("Active cases: "
-        + formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
+    d3.select("#info_country2_confirmed").text(formatNumberWithCommas(getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
+    d3.select("#info_country2_deaths").text(formatNumberWithCommas(getDatasetFromName('deaths').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
+    d3.select("#info_country2_recovered").text(formatNumberWithCommas(getDatasetFromName('recovered').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
+    d3.select("#info_country2_active_cases").text(formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
 }
 
 function plotCountry() {
