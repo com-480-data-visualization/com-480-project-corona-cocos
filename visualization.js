@@ -683,6 +683,13 @@ function plotCountry() {
     redrawGraphPoints();
 }
 
+function updateGovInfo() {
+		let current_measures = data.measures.filter(d => d.country === data.country_1 || d.country === data.country_2)
+		current_measures = current_measures.filter(d => d.date = data.current_date).map(d => [d.date, d.country])
+
+		return current_measures
+}
+
 function getDatasetFromName(name) {
     if (name === 'deaths') {
         return data.deaths;
@@ -732,9 +739,9 @@ d3.csv('./generated/confirmed.csv', confirmed_data => {
     d3.csv('./generated/sick.csv', sick_data => {
         data.sick = sick_data;
     })
-    d3.csv('./generated/daily.csv', daily_data => {
-        data.daily = daily_data;
-    })
+		d3.csv('./generated/governments-measures.csv', gov_data => {
+				data.measures = gov_data;
+		})
     d3.queue()
         .defer(d3.json, "world.topojson")
         .await(ready)
