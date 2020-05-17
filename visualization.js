@@ -680,9 +680,14 @@ function plotCountry() {
     updateGraphDots();
 }
 
-function updateGovInfo() {
+function updateMeasuresInfo() {
 		let current_measures = data.measures.filter(d => d.country === data.country_1 || d.country === data.country_2)
-		current_measures = current_measures.filter(d => d.date = data.current_date).map(d => [d.date, d.country])
+		current_date_dt = new Date(data.current_date)
+		current_week_dt = new Date(data.current_date)
+		current_week_dt = current_week_dt.setDate(current_week_dt.getDate() - 7)
+
+		current_measures.map(d => d.date_dt = new Date(d.date))
+		current_measures = current_measures.filter(d => d.date_dt <= current_date_dt && d.date_dt > current_week_dt)
 
 		return current_measures
 }
