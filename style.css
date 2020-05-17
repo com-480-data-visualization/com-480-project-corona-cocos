@@ -131,14 +131,28 @@ body {
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .zoomDropdownButton {background-color: #0e132b;}
 
-.whiteContent line{
+.whiteContent line {
 	stroke: #FFFFFF;
 }
 
-.whiteContent path{
+.whiteContent path {
 	stroke: #FFFFFF;
 }
 
-.whiteContent text{
+.whiteContent text {
 	fill: #FFFFFF;
+}
+
+.count_cases {
+	text-align: center;
+	width: 100px;
+}
+
+.graph_scales {
+	display: flex;
+	align-items: center;
+}
+
+.graph_scale {
+	margin-left: 50px;
 }
