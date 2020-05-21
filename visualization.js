@@ -1,5 +1,5 @@
 const minDate = "2020-01-23";
-const maxDate = "2020-05-09";
+const maxDate = "2020-05-20";
 const startDate = new Date(minDate);
 const endDate = new Date(maxDate);
 const ticksCount = 5;
@@ -34,6 +34,12 @@ var map_svg = d3.select("#map")
     .attr("width", width + margin.left + margin.right)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+
+var gov_info_svg = d3.select("#gov_info")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", 220)
+    .attr("viewBox", `0 -20 ${width} 220`);
 
 function continentZoom(idButton) {
     d3.select("#zoomDropdownButton").text("Focus: " + d3.select("#" + idButton).text());
@@ -295,6 +301,7 @@ function displayLegend(dataSetName) {
     var svgLegend = d3.select("#legend").append('svg')
         .attr("width", 100)
         .attr("height", 600);
+
     var defs = svgLegend.append('defs');
 
     // append a linearGradient element to the defs and give it a unique id
@@ -413,6 +420,46 @@ function displayLegend(dataSetName) {
         .attr("class", "whiteContent")
         .attr("transform", "translate(0," + 45 + ")")
         .call(d3.axisBottom(x).ticks(ticksCount));*/
+}
+
+function getDataGovernementInfo(i) {
+    infos = [...Array(100).keys()].map(n => `Information ${n}`)
+    return infos.slice(i, i+10).reverse()
+}
+
+function updateGovernementInfo(i) {
+    const t = gov_info_svg.transition()
+                .duration(600);
+
+    let text = gov_info_svg.selectAll("text")
+                .data(getDataGovernementInfo(i), d => d)
+
+    let space = 18
+    let transition_space = 30
+    
+    text.enter()
+        .append("text")
+        .attr("font-size", "15px")
+        .attr("fill", "green")
+        .attr("opacity", 0)
+        .attr("x", 0)
+        .attr("y", (d, i) => i * space - transition_space)
+        .text(d => d)
+        .call(enter => enter.transition(t)
+            .attr("y", (d, i) => i * space)
+            .attr("opacity", 1))
+
+    text.exit()
+        .attr("fill", "brown")
+        .call(exit => exit.transition(t)
+            .attr("opacity", 0)
+            .attr("y", (d, i) => i * space + transition_space)
+            .remove())
+
+    text.attr("fill", "black")
+        .attr("x", 0)
+        .call(update => update.transition(t)
+            .attr("y", (d, i) => i * space))
 }
 
 function updateCountriesColor(svg, path, coutries_data, dataset, date) {
@@ -717,15 +764,15 @@ function plotCountry() {
 }
 
 function updateMeasuresInfo() {
-		let current_measures = data.measures.filter(d => d.country === data.country_1 || d.country === data.country_2)
-		current_date_dt = new Date(data.current_date)
-		current_week_dt = new Date(data.current_date)
-		current_week_dt = current_week_dt.setDate(current_week_dt.getDate() - 7)
+		let currentMeasures1 = data.measures.filter(m => m.country === data.country_1)
+			.filter(m => m.date_dt <= new Date(data.current_date))
+			.sort((a, b) => a.date_dt - b.date_dt).slice(1).slice(-5)
+		let currentMeasures2 = data.measures.filter(m => m.country === data.country_2)
+			.filter(m => m.date_dt <= new Date(data.current_date))
+			.sort((a, b) => a.date_dt - b.date_dt).slice(1).slice(-5)
 
-		current_measures.map(d => d.date_dt = new Date(d.date))
-		current_measures = current_measures.filter(d => d.date_dt <= current_date_dt && d.date_dt > current_week_dt)
 
-		return current_measures
+		return currentMeasures1.concat(currentMeasures2)
 }
 
 function getDatasetFromName(name) {
@@ -734,7 +781,7 @@ function getDatasetFromName(name) {
     } else if (name === 'confirmed') {
         return data.confirmed;
     } else if (name === 'sick') {
-        return data.sick;
+       return data.sick;
     } else if (name === 'daily') {
         return data.daily;
     } else {
@@ -779,7 +826,8 @@ d3.csv('./generated/confirmed.csv', confirmed_data => {
         data.sick = sick_data;
     })
 		d3.csv('./generated/governments-measures.csv', gov_data => {
-				data.measures = gov_data;
+				data.measures = gov_data
+				data.measures.map(m => m.date_dt = new Date(m.date));
 		})
     d3.queue()
         .defer(d3.json, "world.topojson")
