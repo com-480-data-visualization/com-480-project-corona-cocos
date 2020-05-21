@@ -226,7 +226,7 @@ function timeSlider(svg, path, coutries_data) {
                 button.text("Play");
             } else {
                 moving = true;
-                timer = setInterval(step, 200);
+                timer = setInterval(step, 400);
                 button.text("Pause");
             }
         })
@@ -263,6 +263,7 @@ function timeSlider(svg, path, coutries_data) {
             updateCountriesColor(map_svg, path, coutries_data, dataset, newDate);
             updateCountryInfo();
             updateInfoBox();
+            updateGovernementInfo();
         }
     }
 }
@@ -422,17 +423,63 @@ function displayLegend(dataSetName) {
         .call(d3.axisBottom(x).ticks(ticksCount));*/
 }
 
-function getDataGovernementInfo(i) {
-    infos = [...Array(100).keys()].map(n => `Information ${n}`)
-    return infos.slice(i, i+10).reverse()
+function getDataGovernementInfo() {
+    let currentMeasures1 = data.measures.filter(m => m.country === data.country_1)
+        .filter(m => m.date_dt <= new Date(data.current_date))
+        .sort((a, b) => a.date_dt - b.date_dt).slice(1).slice(-5)
+    let currentMeasures2 = data.measures.filter(m => m.country === data.country_2)
+        .filter(m => m.date_dt <= new Date(data.current_date))
+        .sort((a, b) => a.date_dt - b.date_dt).slice(1).slice(-5)
+
+    let currentMeasures = currentMeasures1.concat(currentMeasures2).sort((a, b) => {
+        if(b.date_dt.getTime() === a.date_dt.getTime()) {
+            if('comment' in b && 'comment' in a) return b.comment.localeCompare(a.comment)
+            else return b.category.localeCompare(a.category)
+        }
+        else return b.date_dt.getTime() - a.date_dt.getTime()
+    }).map(d => {
+        date = d['date_dt']
+        date_str = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
+
+        if('comment' in d) {
+            return `${date_str}, ${d['country']}: ${d['comment']}`
+        } else {
+            return `${date_str}, ${d['country']}: ${d['category']}`
+        }
+    })
+
+    return currentMeasures
 }
 
-function updateGovernementInfo(i) {
-    const t = gov_info_svg.transition()
-                .duration(600);
+function arraysEqual(a, b) {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length != b.length) return false;
+
+    for (var i = 0; i < a.length; ++i) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+}
+
+var lastGovernementInfo = null
+var allowChanges = true
+
+function updateGovernementInfo() {
+    newGovernementInfo = getDataGovernementInfo()
+
+    if(!allowChanges || arraysEqual(lastGovernementInfo, newGovernementInfo)) return;
+
+    lastGovernementInfo = newGovernementInfo
+    allowChanges = false
+
+    let transitionTime = 300
+    let transition = gov_info_svg.transition()
+                .duration(transitionTime)
+                .on("end", () => {allowChanges = true; updateGovernementInfo()});
 
     let text = gov_info_svg.selectAll("text")
-                .data(getDataGovernementInfo(i), d => d)
+                .data(newGovernementInfo, d => d)
 
     let space = 18
     let transition_space = 30
@@ -440,25 +487,21 @@ function updateGovernementInfo(i) {
     text.enter()
         .append("text")
         .attr("font-size", "15px")
-        .attr("fill", "green")
+        .attr("fill", "white")
         .attr("opacity", 0)
         .attr("x", 0)
-        .attr("y", (d, i) => i * space - transition_space)
+        .attr("y", (d, i) => -space)
         .text(d => d)
-        .call(enter => enter.transition(t)
+        .call(enter => enter.transition(transition)
             .attr("y", (d, i) => i * space)
             .attr("opacity", 1))
 
     text.exit()
-        .attr("fill", "brown")
-        .call(exit => exit.transition(t)
+        .call(exit => exit.transition(transition)
             .attr("opacity", 0)
-            .attr("y", (d, i) => i * space + transition_space)
             .remove())
 
-    text.attr("fill", "black")
-        .attr("x", 0)
-        .call(update => update.transition(t)
+    text.call(update => update.transition(transition)
             .attr("y", (d, i) => i * space))
 }
 
@@ -502,6 +545,7 @@ function updateCountriesColor(svg, path, coutries_data, dataset, date) {
 
             plotCountry();
             updateCountryInfo();
+            updateGovernementInfo();
         })
         .on("mouseover", d => {
             mouseOverCountry(d.properties.name)
@@ -719,6 +763,7 @@ function plotCountry() {
             data.current_date = date;
             updateCountriesColor(map_svg, data.world_path, data.countries_data, dataset, date);
             updateCountryInfo();
+            updateGovernementInfo();
         }
     }
 
@@ -761,18 +806,6 @@ function plotCountry() {
         }
     }
     updateGraphDots();
-}
-
-function updateMeasuresInfo() {
-		let currentMeasures1 = data.measures.filter(m => m.country === data.country_1)
-			.filter(m => m.date_dt <= new Date(data.current_date))
-			.sort((a, b) => a.date_dt - b.date_dt).slice(1).slice(-5)
-		let currentMeasures2 = data.measures.filter(m => m.country === data.country_2)
-			.filter(m => m.date_dt <= new Date(data.current_date))
-			.sort((a, b) => a.date_dt - b.date_dt).slice(1).slice(-5)
-
-
-		return currentMeasures1.concat(currentMeasures2)
 }
 
 function getDatasetFromName(name) {
