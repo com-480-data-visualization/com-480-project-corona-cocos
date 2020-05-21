@@ -1,5 +1,5 @@
 const minDate = "2020-01-23";
-const maxDate = "2020-05-09";
+const maxDate = "2020-05-20";
 const startDate = new Date(minDate);
 const endDate = new Date(maxDate);
 const ticksCount = 5;
@@ -34,6 +34,12 @@ var map_svg = d3.select("#map")
     .attr("width", width + margin.left + margin.right)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+
+var gov_info_svg = d3.select("#gov_info")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", 220)
+    .attr("viewBox", `0 -20 ${width} 220`);
 
 function continentZoom(idButton) {
     d3.select("#zoomDropdownButton").text("Focus: " + d3.select("#" + idButton).text());
@@ -293,7 +299,8 @@ function displayLegend(countriesData) {
 
     // append a defs (for definition) element to your SVG
     var svgLegend = d3.select("#legend").append('svg')
-        .attr("width", 1200);
+        .attr("width", 1200)
+        .attr("height", 90);
     var defs = svgLegend.append('defs');
 
     // append a linearGradient element to the defs and give it a unique id
@@ -377,6 +384,46 @@ function displayLegend(countriesData) {
         .attr("class", "whiteContent")
         .attr("transform", "translate(0," + 45 + ")")
         .call(d3.axisBottom(x).ticks(ticksCount));*/
+}
+
+function getDataGovernementInfo(i) {
+    infos = [...Array(100).keys()].map(n => `Information ${n}`)
+    return infos.slice(i, i+10).reverse()
+}
+
+function updateGovernementInfo(i) {
+    const t = gov_info_svg.transition()
+                .duration(600);
+
+    let text = gov_info_svg.selectAll("text")
+                .data(getDataGovernementInfo(i), d => d)
+
+    let space = 18
+    let transition_space = 30
+    
+    text.enter()
+        .append("text")
+        .attr("font-size", "15px")
+        .attr("fill", "green")
+        .attr("opacity", 0)
+        .attr("x", 0)
+        .attr("y", (d, i) => i * space - transition_space)
+        .text(d => d)
+        .call(enter => enter.transition(t)
+            .attr("y", (d, i) => i * space)
+            .attr("opacity", 1))
+
+    text.exit()
+        .attr("fill", "brown")
+        .call(exit => exit.transition(t)
+            .attr("opacity", 0)
+            .attr("y", (d, i) => i * space + transition_space)
+            .remove())
+
+    text.attr("fill", "black")
+        .attr("x", 0)
+        .call(update => update.transition(t)
+            .attr("y", (d, i) => i * space))
 }
 
 function updateCountriesColor(svg, path, coutries_data, dataset, date) {
