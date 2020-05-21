@@ -299,7 +299,7 @@ function displayLegend(dataSetName) {
 
     // append a defs (for definition) element to your SVG
     var svgLegend = d3.select("#legend").append('svg')
-        .attr("width", 100)
+        .attr("width", 110)
         .attr("height", 600);
 
     var defs = svgLegend.append('defs');
@@ -436,7 +436,7 @@ function updateGovernementInfo(i) {
 
     let space = 18
     let transition_space = 30
-    
+
     text.enter()
         .append("text")
         .attr("font-size", "15px")
@@ -796,6 +796,11 @@ function changeDataset(dataset_name) {
     updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(dataset_name), data.current_date);
     displayLegend(data.current_dataset);
     plotCountry();
+}
+
+function changeDate(number_days) {
+		// change the day on the slider
+		return 0
 }
 
 window.addEventListener('mousemove', function(e){
