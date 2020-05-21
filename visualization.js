@@ -288,11 +288,11 @@ function displayCountries(svg, path, coutries_data, dataset, date) {
     updateCountriesColor(map_svg, path, coutries_data, dataset, date);
 }
 
-function displayLegend(countriesData) {
+function displayLegend(dataSetName) {
     // Remove previous graphs
     d3.select("#legend").selectAll("*").remove();
 
-    dataset = getDatasetFromName(countriesData);
+    dataset = getDatasetFromName(dataSetName);
 
     const max = d3.max(dataset, d => Math.max.apply(Math, formatMatch(d).map(function (o) {
         return o.value;
@@ -300,8 +300,9 @@ function displayLegend(countriesData) {
 
     // append a defs (for definition) element to your SVG
     var svgLegend = d3.select("#legend").append('svg')
-        .attr("width", 1200)
-        .attr("height", 90);
+        .attr("width", 100)
+        .attr("height", 600);
+
     var defs = svgLegend.append('defs');
 
     // append a linearGradient element to the defs and give it a unique id
@@ -312,8 +313,8 @@ function displayLegend(countriesData) {
     linearGradient
         .attr("x1", "0%")
         .attr("y1", "0%")
-        .attr("x2", "100%")
-        .attr("y2", "0%");
+        .attr("x2", "0%")
+        .attr("y2", "100%");
 
     // append multiple color stops by using D3's data/enter step
     linearGradient.selectAll("stop")
@@ -335,38 +336,73 @@ function displayLegend(countriesData) {
         .attr("class", "legendTitle")
         .attr("x", 0)
         .attr("y", 20)
+        .attr("font-size", 11)
         .attr("fill", "#FFFFFF")
-        .style("text-anchor", "left")
-        .text("Count relative to country's population");
+        .text("Count relative to");
+
+    svgLegend.append("text")
+        .attr("class", "legendTitle")
+        .attr("x", 0)
+        .attr("y", 35)
+        .attr("font-size", 11)
+        .attr("fill", "#FFFFFF")
+        .text("country's population")
 
     // draw the rectangle and fill with gradient
     svgLegend.append("rect")
         .attr("x", 10)
-        .attr("y", 30)
-        .attr("width", 1191)
-        .attr("height", 15)
+        .attr("y", 55)
+        .attr("width", 15)
+        .attr("height", 505)
         .style("fill", "url(#linear-gradient)");
 
     //create tick marks
     var xLeg = d3.scaleLog()
         .domain([1 / 1000000, (max - 1) / 1000000])
-        .range([10, 1199]) // This is where the axis is placed: from 10 px to 400px
+        .range([10, 515]) // This is where the axis is placed: from 10 px to 400px
         .base(2);
 
+    // Right legend information for each type of data set
+    const ticksCount = {
+        "confirmed": 5,
+        "deaths": 4,
+        "recovered": 4,
+        "sick": 5,
+    };
+    const tickLabels = {
+        "confirmed":["1/1,000,000","10/1,000,000","100/1,000,000","1/1000", "10/1000"],
+        "deaths":["1/1,000,000","10/1,000,000","100/1,000,000","1/1000"],
+        "recovered":["1/1,000,000","10/1,000,000","100/1,000,000","1/1000"],
+        "sick":["1/1,000,000","10/1,000,000","100/1,000,000","1/1000", "10/1000"],
+    };
+    const tickValues = {
+        "confirmed":[1/1000000.0,10/1000000.0,100/1000000.0,1/1000.0, 10/1000.0],
+        "deaths":[1/1000000.0,10/1000000.0,100/1000000.0,1/1000.0],
+        "recovered":[1/1000000.0,10/1000000.0,100/1000000.0,1/1000.0],
+        "sick":[1/1000000.0,10/1000000.0,100/1000000.0,1/1000.0, 10/1000.0],
+    };
 
-    var x2 = d3.axisBottom(xLeg).tickFormat(d3.format(".2s"));
+    var x2 = d3.axisLeft(xLeg)
+        .tickSize(15)
+        .ticks(ticksCount[dataSetName])
+        .tickValues(tickValues[dataSetName])
+        .tickFormat((_,i) => tickLabels[dataSetName][i]);
 
     svgLegend
         .append("g")
         .attr("class", "whiteContent")
-        .attr("transform", "translate(0, 45)")
-        .call(x2);
+        .attr("transform", "translate(25, 45)")
+        .call(x2)
+        .attr("text-anchor", "start");
+
+    svgLegend.selectAll(".tick text")
+     .attr("x","5px");
 
     // No data text
     svgLegend.append("text")
         .attr("class", "legendTitle")
         .attr("x", 30)
-        .attr("y", 76)
+        .attr("y", 591)
         .attr("fill", "#FFFFFF")
         .style("text-anchor", "left")
         .text("No data");
@@ -374,7 +410,7 @@ function displayLegend(countriesData) {
     // Square no data color
     svgLegend.append("rect")
         .attr("x", 10)
-        .attr("y", 63)
+        .attr("y", 578)
         .attr("width", 15)
         .attr("height", 15)
         .style("stroke-width", 1)
@@ -849,9 +885,10 @@ d3.csv('./generated/confirmed.csv', confirmed_data => {
     function ready(error, world_data) {
         const countries_data = topojson.feature(world_data, world_data.objects.countries).features;
         data.countries_data = countries_data;
+        data.current_dataset = 'confirmed';
 
         displayCountries(map_svg, world_path, countries_data, confirmed_data, minDate);
-        displayLegend(countries_data);
+        displayLegend(data.current_dataset);
         timeSlider(map_svg, world_path, countries_data, confirmed_data);
         continentZoom('worldButton');
         plotCountry();
