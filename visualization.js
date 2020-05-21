@@ -330,6 +330,14 @@ function displayLegend(dataSetName) {
             return d.color;
         });
 
+
+    const legendTitle = {
+        "confirmed": "Confirmed cases",
+        "deaths": "Deaths",
+        "recovered": "Recovered cases",
+        "sick": "Active cases",
+    }
+
     // append title
     svgLegend.append("text")
         .attr("class", "legendTitle")
@@ -337,7 +345,7 @@ function displayLegend(dataSetName) {
         .attr("y", 20)
         .attr("font-size", 11)
         .attr("fill", "#FFFFFF")
-        .text("Count relative to");
+        .text(legendTitle[dataSetName]);
 
     svgLegend.append("text")
         .attr("class", "legendTitle")
@@ -345,7 +353,7 @@ function displayLegend(dataSetName) {
         .attr("y", 35)
         .attr("font-size", 11)
         .attr("fill", "#FFFFFF")
-        .text("country's population")
+        .text("ratio")
 
     // draw the rectangle and fill with gradient
     svgLegend.append("rect")
