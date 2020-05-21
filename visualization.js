@@ -681,15 +681,15 @@ function plotCountry() {
 }
 
 function updateMeasuresInfo() {
-		let current_measures = data.measures.filter(d => d.country === data.country_1 || d.country === data.country_2)
-		current_date_dt = new Date(data.current_date)
-		current_week_dt = new Date(data.current_date)
-		current_week_dt = current_week_dt.setDate(current_week_dt.getDate() - 7)
+		let currentMeasures1 = data.measures.filter(m => m.country === data.country_1)
+			.filter(m => m.date_dt <= new Date(data.current_date))
+			.sort((a, b) => a.date_dt - b.date_dt).slice(1).slice(-5)
+		let currentMeasures2 = data.measures.filter(m => m.country === data.country_2)
+			.filter(m => m.date_dt <= new Date(data.current_date))
+			.sort((a, b) => a.date_dt - b.date_dt).slice(1).slice(-5)
 
-		current_measures.map(d => d.date_dt = new Date(d.date))
-		current_measures = current_measures.filter(d => d.date_dt <= current_date_dt && d.date_dt > current_week_dt)
 
-		return current_measures
+		return currentMeasures1.concat(currentMeasures2)
 }
 
 function getDatasetFromName(name) {
@@ -698,7 +698,7 @@ function getDatasetFromName(name) {
     } else if (name === 'confirmed') {
         return data.confirmed;
     } else if (name === 'sick') {
-        return data.sick;
+       return data.sick;
     } else if (name === 'daily') {
         return data.daily;
     } else {
@@ -743,7 +743,8 @@ d3.csv('./generated/confirmed.csv', confirmed_data => {
         data.sick = sick_data;
     })
 		d3.csv('./generated/governments-measures.csv', gov_data => {
-				data.measures = gov_data;
+				data.measures = gov_data
+				data.measures.map(m => m.date_dt = new Date(m.date));
 		})
     d3.queue()
         .defer(d3.json, "world.topojson")
