@@ -439,11 +439,20 @@ function getDataGovernementInfo() {
         .filter(m => m.date_dt <= new Date(data.current_date))
         .sort((a, b) => a.date_dt - b.date_dt).slice(1).slice(-5)
 
-    let currentMeasures = currentMeasures1.concat(currentMeasures2).sort((a, b) => b.date_dt - a.date_dt).map(d => {
+    let currentMeasures = currentMeasures1.concat(currentMeasures2).sort((a, b) => {
+        if(b.date_dt === a.date_dt) {
+            if('comment' in b && 'comment' in a) return b.comment.localeCompare(a.comment)
+            else return b.category.localeCompare(a.category)
+        }
+        else return b.date_dt.getTime() - a.date_dt.getTime()
+    }).map(d => {
+        date = d['date_dt']
+        date_str = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
+
         if('comment' in d) {
-            return `${d['date']}, ${d['country']}: ${d['comment']}`
+            return `${date_str}, ${d['country']}: ${d['comment']}`
         } else {
-            return `${d['date']}, ${d['country']}: ${d['category']}`
+            return `${date_str}, ${d['country']}: ${d['category']}`
         }
     })
 
@@ -461,65 +470,46 @@ function arraysEqual(a, b) {
     return true;
 }
 
-var timeUpdateGovernementInfo = 0
 var lastGovernementInfo = null
+var allowChanges = true
 
 function updateGovernementInfo() {
-    let newGovernementInfo = getDataGovernementInfo()
+    newGovernementInfo = getDataGovernementInfo()
 
-    if(arraysEqual(lastGovernementInfo, newGovernementInfo)) return;
+    if(!allowChanges || arraysEqual(lastGovernementInfo, newGovernementInfo)) return;
 
     lastGovernementInfo = newGovernementInfo
+    allowChanges = false
+
+    let transitionTime = 300
+    let transition = gov_info_svg.transition()
+                .duration(transitionTime)
+                .on("end", () => {allowChanges = true; updateGovernementInfo()});
 
     let text = gov_info_svg.selectAll("text")
                 .data(newGovernementInfo, d => d)
 
-    let space = 18
-    let transitionTime = 200
-
-    let currentTime = window.performance.now()
-    let transition = currentTime - timeUpdateGovernementInfo >= transitionTime
-
-    console.log(currentTime - timeUpdateGovernementInfo)
-
-    if (!transition) {
-        text.enter()
-            .append("text")
-            .attr("font-size", "15px")
-            .attr("fill", "white")
-            .attr("x", 0)
-            .attr("y", (d, i) => i * space)
-            .text(d => d)
-
-        text.exit()
-            .remove()
-
-        text.attr("x", 0)
-            .attr("y", (d, i) => i * space)
-    } else {
-        timeUpdateGovernementInfo = currentTime
-        const t = gov_info_svg.transition()
-                .duration(transitionTime);
+    let space = 18        
         
-        text.enter()
-            .append("text")
-            .attr("font-size", "15px")
-            .attr("fill", "white")
-            .attr("opacity", 0)
-            .attr("x", 0)
+    text.enter()
+        .append("text")
+        .attr("font-size", "15px")
+        .attr("fill", "white")
+        .attr("opacity", 0)
+        .attr("x", 0)
+        .attr("y", (d, i) => -space)
+        .text(d => d)
+        .call(enter => enter.transition(transition)
             .attr("y", (d, i) => i * space)
-            .text(d => d)
-            .call(enter => enter.transition(t)
-                .attr("opacity", 1))
+            .attr("opacity", 1))
 
-        text.exit()
-            .call(exit => exit.transition(t)
-                .attr("opacity", 0)
-                .remove())
+    text.exit()
+        .call(exit => exit.transition(transition)
+            .attr("opacity", 0)
+            .remove())
 
-        text.call(update => update.transition(t)
-                .attr("y", (d, i) => i * space))
-    }
+    text.call(update => update.transition(transition)
+            .attr("y", (d, i) => i * space))
 }
 
 function updateCountriesColor(svg, path, coutries_data, dataset, date) {
