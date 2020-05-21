@@ -432,7 +432,7 @@ function getDataGovernementInfo() {
         .sort((a, b) => a.date_dt - b.date_dt).slice(1).slice(-5)
 
     let currentMeasures = currentMeasures1.concat(currentMeasures2).sort((a, b) => {
-        if(b.date_dt === a.date_dt) {
+        if(b.date_dt.getTime() === a.date_dt.getTime()) {
             if('comment' in b && 'comment' in a) return b.comment.localeCompare(a.comment)
             else return b.category.localeCompare(a.category)
         }
