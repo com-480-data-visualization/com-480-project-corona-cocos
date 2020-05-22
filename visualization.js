@@ -7,6 +7,7 @@ const noDataColor = "#eab11f";
 var lastReplacedCountry = 2;
 var updateGraphDots = null;
 var updateSlider = null;
+var typingTimer = null;
 
 function timeToString(date) {
     return d3.timeFormat("%Y-%m-%d")(date)
@@ -35,11 +36,20 @@ var map_svg = d3.select("#map")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-var gov_info_svg = d3.select("#gov_info")
+
+const govWidth = 1800;
+const govHeight = 100;
+var gov_info_1_svg = d3.select("#gov_info_1")
     .append("svg")
-    .attr("width", width)
-    .attr("height", 220)
-    .attr("viewBox", `0 -20 ${width} 220`);
+    .attr("width", govWidth)
+    .attr("height", govHeight)
+    .attr("viewBox", `0 -20 ${govWidth} ${govHeight}`);
+
+var gov_info_2_svg = d3.select("#gov_info_2")
+    .append("svg")
+    .attr("width", govWidth)
+    .attr("height", govHeight)
+    .attr("viewBox", `0 -20 ${govWidth} ${govHeight}`);
 
 function continentZoom(idButton) {
     d3.select("#zoomDropdownButton").text("Focus: " + d3.select("#" + idButton).text());
@@ -226,7 +236,7 @@ function timeSlider(svg, path, coutries_data) {
                 button.text("Play");
             } else {
                 moving = true;
-                timer = setInterval(step, 400);
+                timer = setInterval(step, 500);
                 button.text("Pause");
             }
         })
@@ -263,7 +273,9 @@ function timeSlider(svg, path, coutries_data) {
             updateCountriesColor(map_svg, path, coutries_data, dataset, newDate);
             updateCountryInfo();
             updateInfoBox();
-            updateGovernementInfo();
+            
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(updateGovernementInfo, 400);
         }
     }
 }
@@ -337,7 +349,7 @@ function displayLegend(dataSetName) {
         "deaths": "Deaths",
         "recovered": "Recovered cases",
         "sick": "Active cases",
-    }
+    };
 
     // append title
     svgLegend.append("text")
@@ -354,7 +366,7 @@ function displayLegend(dataSetName) {
         .attr("y", 35)
         .attr("font-size", 11)
         .attr("fill", "#FFFFFF")
-        .text("ratio")
+        .text("ratio to population");
 
     // draw the rectangle and fill with gradient
     svgLegend.append("rect")
@@ -434,29 +446,35 @@ function displayLegend(dataSetName) {
 function getDataGovernementInfo() {
     let currentMeasures1 = data.measures.filter(m => m.country === data.country_1)
         .filter(m => m.date_dt <= new Date(data.current_date))
-        .sort((a, b) => a.date_dt - b.date_dt).slice(1).slice(-5)
+        .sort((a, b) => a.date_dt - b.date_dt).slice(1).slice(-5);
     let currentMeasures2 = data.measures.filter(m => m.country === data.country_2)
         .filter(m => m.date_dt <= new Date(data.current_date))
-        .sort((a, b) => a.date_dt - b.date_dt).slice(1).slice(-5)
+        .sort((a, b) => a.date_dt - b.date_dt).slice(1).slice(-5);
 
-    let currentMeasures = currentMeasures1.concat(currentMeasures2).sort((a, b) => {
+    const sorter = (a, b) => {
         if(b.date_dt.getTime() === a.date_dt.getTime()) {
-            if('comment' in b && 'comment' in a) return b.comment.localeCompare(a.comment)
-            else return b.category.localeCompare(a.category)
+            if('comment' in b && 'comment' in a) return b.comment.localeCompare(a.comment);
+            else return b.category.localeCompare(a.category);
         }
-        else return b.date_dt.getTime() - a.date_dt.getTime()
-    }).map(d => {
-        date = d['date_dt']
+        else return b.date_dt.getTime() - a.date_dt.getTime();
+    }
+
+    const mapper = d => {
+        const date = d['date_dt'];
+        const formatDate = d3.timeFormat("%d %b");
         date_str = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
 
         if('comment' in d) {
-            return `${date_str}, ${d['country']}: ${d['comment']}`
+            return `${d['country']}, ${formatDate(date)}, ${d['category']}: ${d['comment']}`;
         } else {
-            return `${date_str}, ${d['country']}: ${d['category']}`
+            return `${d['country']}, ${formatDate(date)}, ${d['category']}`;
         }
-    })
+    }
 
-    return currentMeasures
+    currentMeasures1 = currentMeasures1.sort(sorter).map(mapper);
+    currentMeasures2 = currentMeasures2.sort(sorter).map(mapper);
+
+    return [currentMeasures1, currentMeasures2];
 }
 
 function arraysEqual(a, b) {
@@ -470,28 +488,35 @@ function arraysEqual(a, b) {
     return true;
 }
 
-var lastGovernementInfo = null
-var allowChanges = true
+var lastGovernementInfo1 = null;
+var lastGovernementInfo2 = null;
+var allowChanges = true;
 
 function updateGovernementInfo() {
-    newGovernementInfo = getDataGovernementInfo()
+    const newGovernementInfos = getDataGovernementInfo();
 
-    if(!allowChanges || arraysEqual(lastGovernementInfo, newGovernementInfo)) return;
+    if(!allowChanges || (arraysEqual(lastGovernementInfo1, newGovernementInfos[0]) && arraysEqual(lastGovernementInfo2, newGovernementInfos[1]))) return;
 
-    lastGovernementInfo = newGovernementInfo
-    allowChanges = false
+    lastGovernementInfo1 = newGovernementInfos[0];
+    lastGovernementInfo2 = newGovernementInfos[1];
+    allowChanges = false;
 
-    let transitionTime = 300
-    let transition = gov_info_svg.transition()
-                .duration(transitionTime)
-                .on("end", () => {allowChanges = true; updateGovernementInfo()});
+    let transitionTime = 300;
 
-    let text = gov_info_svg.selectAll("text")
-                .data(newGovernementInfo, d => d)
+    const updateSvg = (gov_info_svg, gov_data) => {
+        let transition = gov_info_svg.transition()
+        .duration(transitionTime)
+        .on("end", () => {
+            allowChanges = true;
+            updateGovernementInfo();
+        });
 
-    let space = 18        
-        
-    text.enter()
+        let text = gov_info_svg.selectAll("text")
+                .data(gov_data, d => d);
+
+        let space = 18;   
+
+        text.enter()
         .append("text")
         .attr("font-size", "15px")
         .attr("fill", "white")
@@ -501,15 +526,19 @@ function updateGovernementInfo() {
         .text(d => d)
         .call(enter => enter.transition(transition)
             .attr("y", (d, i) => i * space)
-            .attr("opacity", 1))
+            .attr("opacity", 1));
 
-    text.exit()
+        text.exit()
         .call(exit => exit.transition(transition)
             .attr("opacity", 0)
-            .remove())
+            .remove());
 
-    text.call(update => update.transition(transition)
-            .attr("y", (d, i) => i * space))
+        text.call(update => update.transition(transition)
+            .attr("y", (d, i) => i * space));
+    }
+
+    updateSvg(gov_info_1_svg, lastGovernementInfo1);
+    updateSvg(gov_info_2_svg, lastGovernementInfo2);
 }
 
 function updateCountriesColor(svg, path, coutries_data, dataset, date) {
@@ -542,10 +571,15 @@ function updateCountriesColor(svg, path, coutries_data, dataset, date) {
             }
         })
         .on("click", d => {
-            if(lastReplacedCountry == 1){
+            if (data.country_2 == d.properties.name
+                || data.country_1 == d.properties.name) {
+                return;
+            }
+
+            if (lastReplacedCountry == 1) {
                 data.country_2 = d.properties.name;
                 lastReplacedCountry = 2;
-            }else{
+            } else {
                 lastReplacedCountry = 1;
                 data.country_1 = d.properties.name;
             }
@@ -716,10 +750,10 @@ function plotCountry() {
     .attr("stroke-width", 1.5)
     .attr("d", d3.line()
         .x(function (d) {
-            return x(d.date)
+            return x(d.date);
         })
         .y(function (d) {
-            return y(parseInt(d.value) + 1)
+            return y(parseInt(d.value) + 1);
         })
     );
 
@@ -730,7 +764,7 @@ function plotCountry() {
         .append('circle')
         .style("fill", "darkorange")
         .attr('r', 5)
-        .style("opacity", 1)
+        .style("opacity", 1);
 
     // Create the text that travels along the curve of chart
     var focusText2 = svg
@@ -770,7 +804,9 @@ function plotCountry() {
             data.current_date = date;
             updateCountriesColor(map_svg, data.world_path, data.countries_data, dataset, date);
             updateCountryInfo();
-            updateGovernementInfo();
+
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(updateGovernementInfo, 400);
         }
     }
 
@@ -853,8 +889,8 @@ d3.csv('./generated/confirmed.csv', confirmed_data => {
     data.confirmed = confirmed_data;
     data.current_dataset = 'confirmed';
     data.current_date = minDate;
-    data.country_1 = "World";
-    data.country_2 = "Switzerland";
+    data.country_1 = "Switzerland";
+    data.country_2 = "World";
 
     d3.csv('./generated/deaths.csv', deaths_data => {
         data.deaths = deaths_data;
@@ -885,10 +921,13 @@ d3.csv('./generated/confirmed.csv', confirmed_data => {
         data.countries_data = countries_data;
         data.current_dataset = 'confirmed';
 
+        continentZoom('worldButton');
+        data.country_1 = "Switzerland";
+        data.country_2 = "World";
+
         displayCountries(map_svg, world_path, countries_data, confirmed_data, minDate);
         displayLegend(data.current_dataset);
         timeSlider(map_svg, world_path, countries_data, confirmed_data);
-        continentZoom('worldButton');
         plotCountry();
         updateCountryInfo();
     }
