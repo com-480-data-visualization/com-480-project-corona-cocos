@@ -13,42 +13,46 @@
 		<link rel="icon" href="icon.svg">
 	</head>
 	<body>
-		<div class="sliderContainer">
-			<button id="play-button">Play</button>
-			<img class='arrow' src="images/arrow-left.png" height="30px" onclick="ChangeDate(1)">
-			<img class='arrow' src="images/arrow-right.png" height="30px" onclick="ChangeDate(-1)">
-			<div id="slider"></div>
-			<div class="dropdown">
-				<button class="dropdownButton" id="zoomDropdownButton">Focus: World</button>
-				<div class="dropdown-content">
-					<a id="worldButton" type="button" onclick="continentZoom(this.id)">World</a>
-					<a id="euButton" type="button" onclick="continentZoom(this.id)">Europe</a>
-					<a id="asiaButton" type="button" onclick="continentZoom(this.id)">Asia</a>
-					<a id="naButton" type="button" onclick="continentZoom(this.id)">North America</a>
-					<a id="saButton" type="button" onclick="continentZoom(this.id)">South America</a>
-					<a id="afrButton" type="button" onclick="continentZoom(this.id)">Africa</a>
-					<a id="ocButton" type="button" onclick="continentZoom(this.id)">Oceania</a>
-				</div>
-			</div>
-			<div class="dropdown">
-				<button class="dropdownButton" id="datasetDropdownButton">Data: Confirmed</button>
-				<div class="dropdown-content">
-					<a id="confirmed" type="button" onClick="changeDataset(this.id)">Confirmed</a>
-					<a id="deaths" type="button" onClick="changeDataset(this.id)">Deaths</a>
-					<a id="recovered" type="button" onClick="changeDataset(this.id)">Recovered</a>
-					<a id="sick" type="button" onClick="changeDataset(this.id)">Active cases</a>
-				</div>
-			</div>
-		</div>
 		<div class="mapContainer">
 			<div id="legend"></div>
-			<div id="map"></div>
-			<div id="info_box">
-				<div id="info_box_name">World</div>
-				<div id="info_box_confirmed">Confirmed: x</div>
-				<div id="info_box_deaths">Deaths: x</div>
-				<div id="info_box_recovered">Recovered: x</div>
-				<div id="info_box_active_cases">Active cases: x</div>
+			<div class="mapAndButtonsContainer">
+				<div class="buttonsForMapContainer">
+					<div class="timeControlContainer">
+						<button id="play-button">Play</button>
+						<img class='arrow' src="images/arrow-left.png" height="25px" onclick="changeDate(-1)">
+						<img class='arrow' src="images/arrow-right.png" height="25px" onclick="changeDate(1)">
+					</div>
+					<div id="slider"></div>
+					<div class="dropdown">
+						<button class="dropdownButton" id="zoomDropdownButton">Focus: World</button>
+						<div class="dropdown-content">
+							<a id="worldButton" type="button" onclick="continentZoom(this.id)">World</a>
+							<a id="euButton" type="button" onclick="continentZoom(this.id)">Europe</a>
+							<a id="asiaButton" type="button" onclick="continentZoom(this.id)">Asia</a>
+							<a id="naButton" type="button" onclick="continentZoom(this.id)">North America</a>
+							<a id="saButton" type="button" onclick="continentZoom(this.id)">South America</a>
+							<a id="afrButton" type="button" onclick="continentZoom(this.id)">Africa</a>
+							<a id="ocButton" type="button" onclick="continentZoom(this.id)">Oceania</a>
+						</div>
+					</div>
+					<div class="dropdown">
+						<button class="dropdownButton" id="datasetDropdownButton">Data: Confirmed</button>
+						<div class="dropdown-content">
+							<a id="confirmed" type="button" onClick="changeDataset(this.id)">Confirmed</a>
+							<a id="deaths" type="button" onClick="changeDataset(this.id)">Deaths</a>
+							<a id="recovered" type="button" onClick="changeDataset(this.id)">Recovered</a>
+							<a id="sick" type="button" onClick="changeDataset(this.id)">Active cases</a>
+						</div>
+					</div>
+				</div>
+				<div id="map"></div>
+				<div id="info_box">
+					<div id="info_box_name">World</div>
+					<div id="info_box_confirmed">Confirmed: x</div>
+					<div id="info_box_deaths">Deaths: x</div>
+					<div id="info_box_recovered">Recovered: x</div>
+					<div id="info_box_active_cases">Active cases: x</div>
+				</div>
 			</div>
 			<div class="info_country_container">
 				<div>

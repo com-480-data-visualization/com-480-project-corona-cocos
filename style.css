@@ -14,20 +14,29 @@ body {
 	color: white;
 }
 
-.sliderContainer {
-	display: flex;
-	align-items: center;
-	margin-left: 110px;
-}
 .mapContainer {
 	display: flex;
 	justify-content: space-between;
 	align-items: stretch;
 }
 
-.mapAndLegendContainer {
+.buttonsForMapContainer {
 	display: flex;
+	align-items: center;
+	justify-content: space-between;
 	flex-direction: row;
+}
+
+.timeControlContainer {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-start;
+		/* padding: 0 30px; */
+}
+
+#legend, .info_country_container {
+	padding: 83px 0;
 }
 
 #play-button {
