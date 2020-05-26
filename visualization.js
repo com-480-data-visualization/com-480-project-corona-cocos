@@ -1,7 +1,7 @@
 const minDate = "2020-01-23";
 const maxDate = "2020-05-20";
-const startDate = new Date(minDate);
-const endDate = new Date(maxDate);
+const minDate_dt = new Date(minDate);
+const maxDate_dt = new Date(maxDate);
 const ticksCount = 5;
 const noDataColor = "#eab11f";
 var lastReplacedCountry = 2;
@@ -19,7 +19,7 @@ function formatNumberWithCommas(x) {
 
 function formatMatch(match) {
     var formatted = []
-    for (var d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+    for (var d = new Date(minDate_dt); d <= maxDate_dt; d.setDate(d.getDate() + 1)) {
         formatted.push({date: new Date(d), value: match[timeToString(d)]});
     }
     return formatted
@@ -152,7 +152,7 @@ function timeSlider(svg, path, coutries_data) {
     var formatDateIntoYearMonth = d3.timeFormat("%b %Y");
     var formatDate = d3.timeFormat("%d %b");
 
-    const totalDays = (endDate - startDate) / (1000 * 3600 * 24)
+    const totalDays = (maxDate_dt - minDate_dt) / (1000 * 3600 * 24)
 
     var margin = {top: 100, right: 20, bottom: -200, left: 20},
         width = 600 - margin.left - margin.right,
@@ -170,7 +170,7 @@ function timeSlider(svg, path, coutries_data) {
     var playButton = d3.select("#play-button");
 
     var x = d3.scaleTime()
-        .domain([startDate, endDate])
+        .domain([minDate_dt, maxDate_dt])
         .range([0, targetValue])
         .clamp(true);
 
@@ -223,7 +223,7 @@ function timeSlider(svg, path, coutries_data) {
         .attr("class", "label")
         .attr("fill", "white")
         .attr("text-anchor", "middle")
-        .text(formatDate(startDate))
+        .text(formatDate(minDate_dt))
         .attr("transform", "translate(0," + (-25) + ")")
 
     playButton
@@ -266,7 +266,7 @@ function timeSlider(svg, path, coutries_data) {
     function update(h) {
         // Check the date changed
         const newDate = timeToString(h);
-        if(data.current_date != newDate && h >= startDate && h <= endDate) {
+        if(data.current_date != newDate && h >= minDate_dt && h <= maxDate_dt) {
             // Update the map
             dataset = getDatasetFromName(data.current_dataset);
             data.current_date = newDate;
@@ -676,7 +676,7 @@ function plotCountry() {
 
     // Add X axis --> it is a date format
     var x = d3.scaleTime()
-        .domain([startDate, endDate])
+        .domain([minDate_dt, maxDate_dt])
         .range([0, width]);
     svg.append("g")
         .attr("class", "whiteContent text-small")
@@ -874,8 +874,18 @@ function changeDataset(dataset_name) {
 }
 
 function changeDate(number_days) {
-		// change the day on the slider
-		return 0
+		current_dt = new Date(data.current_date)
+		current_dt.setDate(current_dt.getDate() + number_days)
+		if (current_dt > maxDate_dt || current_dt < minDate_dt)
+				return
+
+		data.current_date = d3.timeFormat("%Y-%m-%d")(current_dt)
+		var map_svg = d3.select("#map").select('svg')
+
+		updateSlider()
+		updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(data.current_dataset), data.current_date);
+		updateCountryInfo();
+		updateInfoBox();
 }
 
 window.addEventListener('mousemove', function(e){
