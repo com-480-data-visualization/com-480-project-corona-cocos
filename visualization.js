@@ -312,7 +312,7 @@ function displayLegend(dataSetName) {
 
     // append a defs (for definition) element to your SVG
     var svgLegend = d3.select("#legend").append('svg')
-        .attr("width", 110)
+        .attr("width", 120)
         .attr("height", 600);
 
     var defs = svgLegend.append('defs');
@@ -353,18 +353,16 @@ function displayLegend(dataSetName) {
 
     // append title
     svgLegend.append("text")
-        .attr("class", "legendTitle")
+        .attr("class", "legendTitle text")
         .attr("x", 0)
         .attr("y", 20)
-        .attr("font-size", 11)
         .attr("fill", "#FFFFFF")
         .text(legendTitle[dataSetName]);
 
     svgLegend.append("text")
-        .attr("class", "legendTitle")
+        .attr("class", "legendTitle text")
         .attr("x", 0)
         .attr("y", 35)
-        .attr("font-size", 11)
         .attr("fill", "#FFFFFF")
         .text("ratio to population");
 
@@ -416,11 +414,12 @@ function displayLegend(dataSetName) {
         .attr("text-anchor", "start");
 
     svgLegend.selectAll(".tick text")
+     .attr("class", "text-small")
      .attr("x","5px");
 
     // No data text
     svgLegend.append("text")
-        .attr("class", "legendTitle")
+        .attr("class", "legendTitle text")
         .attr("x", 30)
         .attr("y", 591)
         .attr("fill", "#FFFFFF")
@@ -680,7 +679,7 @@ function plotCountry() {
         .domain([startDate, endDate])
         .range([0, width]);
     svg.append("g")
-        .attr("class", "whiteContent")
+        .attr("class", "whiteContent text-small")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x).ticks(ticksCount));
 
@@ -699,7 +698,7 @@ function plotCountry() {
         .range([height, 0]);
 
     svg.append("g")
-        .attr("class", "whiteContent")
+        .attr("class", "whiteContent text-small")
         .call(d3.axisLeft(y));
 
     // This allows to find the closest X index of the mouse:

@@ -11,14 +11,15 @@
 		<script type="text/javascript" src="https://d3js.org/topojson.v1.min.js"></script>
 		<link rel="stylesheet" href="style.css">
 		<link rel="icon" href="icon.svg">
+		<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans&family=Roboto&display=swap" rel="stylesheet">  
 	</head>
 	<body>
-		<div class="sliderContainer">
-			<button id="play-button">Play</button>
+		<div class="sliderContainer title">
+			<button id="play-button" class="text">Play</button>
 			<img class='arrow' src="images/arrow-left.png" height="30px" onclick="ChangeDate(1)">
 			<img class='arrow' src="images/arrow-right.png" height="30px" onclick="ChangeDate(-1)">
 			<div id="slider"></div>
-			<div class="dropdown">
+			<div class="dropdown text">
 				<button class="dropdownButton" id="zoomDropdownButton">Focus: World</button>
 				<div class="dropdown-content">
 					<a id="worldButton" type="button" onclick="continentZoom(this.id)">World</a>
@@ -30,7 +31,7 @@
 					<a id="ocButton" type="button" onclick="continentZoom(this.id)">Oceania</a>
 				</div>
 			</div>
-			<div class="dropdown">
+			<div class="dropdown text">
 				<button class="dropdownButton" id="datasetDropdownButton">Data: Confirmed</button>
 				<div class="dropdown-content">
 					<a id="confirmed" type="button" onClick="changeDataset(this.id)">Confirmed</a>
@@ -50,39 +51,39 @@
 				<div id="info_box_recovered">Recovered: x</div>
 				<div id="info_box_active_cases">Active cases: x</div>
 			</div>
-			<div class="info_country_container">
+			<div class="info_country_container title">
 				<div>
 					<table style="width:350px">
 						<tr>
 							<th></th>
-							<th class="count_cases" id="info_country1_name"></th>
-							<th class="count_cases" id="info_country2_name"></th>
+							<th class="count_cases" id="info_country1_name" style="letter-spacing: 1px;"></th>
+							<th class="count_cases" id="info_country2_name" style="letter-spacing: 1px;"></th>
 						</tr>
 						<tr>
 							<td>Confirmed</td>
-							<td class="count_cases" id="info_country1_confirmed"></td>
-							<td class="count_cases" id="info_country2_confirmed"></td>
+							<td class="count_cases text" id="info_country1_confirmed"></td>
+							<td class="count_cases text" id="info_country2_confirmed"></td>
 						</tr>
 						<tr>
 							<td>Deaths</td>
-							<td class="count_cases" id="info_country1_deaths"></td>
-							<td class="count_cases" id="info_country2_deaths"></td>
+							<td class="count_cases text" id="info_country1_deaths"></td>
+							<td class="count_cases text" id="info_country2_deaths"></td>
 						</tr>
 						<tr>
 							<td>Recovered</td>
-							<td class="count_cases" id="info_country1_recovered"></td>
-							<td class="count_cases" id="info_country2_recovered"></td>
+							<td class="count_cases text" id="info_country1_recovered"></td>
+							<td class="count_cases text" id="info_country2_recovered"></td>
 						</tr>
 						<tr>
 							<td>Active cases</td>
-							<td class="count_cases" id="info_country1_active_cases"></td>
-							<td class="count_cases" id="info_country2_active_cases"></td>
+							<td class="count_cases text" id="info_country1_active_cases"></td>
+							<td class="count_cases text" id="info_country2_active_cases"></td>
 						</tr>
 					</table>
 				</div>
 				<div>
 					<div id="graph"></div>
-					<div class="graph_scales">
+					<div class="graph_scales text">
 						<div class="graph_scale"><input id="radio-log" type="radio" name="optradio" onclick="plotCountry()" checked>Log-scale</div>
 						<div class="graph_scale"><input id="radio-linear" type="radio" name="optradio" onclick="plotCountry()">Linear</div>
 					</div>
