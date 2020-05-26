@@ -17,6 +17,14 @@ function formatNumberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+function formatNumberRatio(x) {
+    if (x < 0.001) {
+        return (parseInt(x * 1000000).toString() + "/1,000,000")
+    } else {
+        return (parseInt(x * 100000)/100).toString() + "/1000";
+    }
+}
+
 function formatMatch(match) {
     var formatted = []
     for (var d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
@@ -645,10 +653,28 @@ function updateCountryInfo() {
 }
 
 function plotCountry() {
+    const logScale = document.getElementById('radio-log').checked || document.getElementById('radio-log-percent').checked;
+    const percentScale = document.getElementById('radio-linear-percent').checked || document.getElementById('radio-log-percent').checked;
+
     dataset = getDatasetFromName(data.current_dataset);
 
-    const matchRowsCountry1 = formatMatch(dataset.filter(row => row['Country/Region'] === data.country_1)[0]);
-    const matchRowsCountry2 = formatMatch(dataset.filter(row => row['Country/Region'] === data.country_2)[0]);
+    const country1Population = dataset.filter(row => row['Country/Region'] === data.country_1)[0].population;
+    const country2Population = dataset.filter(row => row['Country/Region'] === data.country_2)[0].population;
+
+    const matchRowsCountry1 = formatMatch(dataset.filter(row => row['Country/Region'] === data.country_1)[0])
+        .map( pair => {
+            return  {
+                "date": pair.date,
+                "value": percentScale ? parseInt(pair.value) / country1Population : parseInt(pair.value),
+            };
+        });
+    const matchRowsCountry2 = formatMatch(dataset.filter(row => row['Country/Region'] === data.country_2)[0])
+        .map( pair => {
+            return  {
+                "date": pair.date,
+                "value": percentScale ? parseInt(pair.value) / country2Population : parseInt(pair.value),
+            };
+        });
 
     const maxValue = Math.max(
         Math.max.apply(Math, matchRowsCountry1.map(function (o) {
@@ -660,7 +686,7 @@ function plotCountry() {
     );
 
     // set the dimensions and margins of the graph
-    var margin = {top: 20, right: 30, bottom: 30, left: 60},
+    var margin = {top: 20, right: 30, bottom: 30, left: 90},
         width = 460 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
@@ -687,25 +713,42 @@ function plotCountry() {
     // Add Y axis
     let y;
 
-    if(document.getElementById('radio-log').checked) {
+    if(logScale) {
         // Log
-        y = d3.scaleLog().base(2)
+        y = d3.scaleLog().base(2);
     } else {
         // Linear
-        y = d3.scaleLinear()
+        y = d3.scaleLinear();
     }
 
-    y = y.domain([1, maxValue])
-        .range([height, 0]);
+    if (logScale && percentScale) {
+        y = y.domain([0.000001, maxValue])
+    } else if (logScale) {
+        y = y.domain([1, maxValue])
+    } else {
+        y = y.domain([0, maxValue])
+    }
+    
+    y = y.range([height, 0]);
 
     svg.append("g")
         .attr("class", "whiteContent")
-        .call(d3.axisLeft(y));
+        .call(d3.axisLeft(y).tickFormat((value,_) => (percentScale ? formatNumberRatio(value) : formatNumberWithCommas(value))));
 
     // This allows to find the closest X index of the mouse:
     var bisect = d3.bisector(function (d) {
         return d.date;
     }).left;
+
+    // Function for y axis
+    const yAxisFunction = d => {
+        if (logScale && percentScale){
+            return y(d.value + 0.000001);
+        } else if (logScale){
+            return y(d.value + 1);
+        }
+        return y(d.value);
+    }
 
     // Add the line
     svg.append("path")
@@ -717,9 +760,7 @@ function plotCountry() {
             .x(function (d) {
                 return x(d.date)
             })
-            .y(function (d) {
-                return y(parseInt(d.value) + 1)
-            })
+            .y(yAxisFunction)
         );
 
     // Create the circle that travels along the curve of chart
@@ -729,7 +770,7 @@ function plotCountry() {
         .append('circle')
         .style("fill", "steelblue")
         .attr('r', 5)
-        .style("opacity", 1)
+        .style("opacity", 1);
 
     // Create the text that travels along the curve of chart
     var focusText1 = svg
@@ -752,9 +793,7 @@ function plotCountry() {
         .x(function (d) {
             return x(d.date);
         })
-        .y(function (d) {
-            return y(parseInt(d.value) + 1);
-        })
+        .y(yAxisFunction)
     );
 
     // Create the circle that travels along the curve of chart
@@ -799,7 +838,7 @@ function plotCountry() {
 
         // Update current date to display
         var date = timeToString(selectedData.date);
-        if(previousDate != date){
+        if (previousDate != date) {
             previousDate = date;
             data.current_date = date;
             updateCountriesColor(map_svg, data.world_path, data.countries_data, dataset, date);
@@ -820,25 +859,26 @@ function plotCountry() {
         }
         selectedData = matchRowsCountry1[i];
 
-        country1Val = parseInt(selectedData.value) + 1;
+        country1Val = yAxisFunction(selectedData);
         focus1
             .attr("cx", x(selectedData.date))
-            .attr("cy", y(country1Val));
+            .attr("cy", country1Val);
         focusText1
-            .html(data.country_1 + ", " + d3.timeFormat("%d %b")(selectedData.date) + ": " + formatNumberWithCommas(selectedData.value))
+            .html(data.country_1 + ", " + d3.timeFormat("%d %b")(selectedData.date) + ": " + (percentScale ? formatNumberRatio(selectedData.value): formatNumberWithCommas(selectedData.value)))
             .attr("x", x(selectedData.date))
-            .attr("y", y(parseInt(selectedData.value) + 1));
+            .attr("y", yAxisFunction(selectedData));
         selectedData = matchRowsCountry2[i];
-        country2Val = parseInt(selectedData.value) + 1;
+
+        country2Val = yAxisFunction(selectedData);
         focus2
             .attr("cx", x(selectedData.date))
-            .attr("cy", y(country2Val));
+            .attr("cy", country2Val);
         focusText2
-            .html(data.country_2 + ", " + d3.timeFormat("%d %b")(selectedData.date) + ": " + formatNumberWithCommas(selectedData.value))
+            .html(data.country_2 + ", " + d3.timeFormat("%d %b")(selectedData.date) + ": " + (percentScale ? formatNumberRatio(selectedData.value): formatNumberWithCommas(selectedData.value)))
             .attr("x", x(selectedData.date))
-            .attr("y", y(parseInt(selectedData.value) + 1));
+            .attr("y", yAxisFunction(selectedData));
 
-        const signX = country2Val > country1Val ? 1 : -1;
+        const signX = country2Val > country1Val ? -1 : 1;
 
         if (i >= matchRowsCountry1.length/2) {
             focusText1.attr("transform", "translate(" + (-focusText1.node().getBBox().width - 13) + "," + signX * 10 + ")");
