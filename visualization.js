@@ -1,7 +1,7 @@
 const minDate = "2020-01-23";
 const maxDate = "2020-05-20";
-const startDate = new Date(minDate);
-const endDate = new Date(maxDate);
+const minDate_dt = new Date(minDate);
+const maxDate_dt = new Date(maxDate);
 const ticksCount = 5;
 const noDataColor = "#eab11f";
 var lastReplacedCountry = 2;
@@ -25,9 +25,13 @@ function formatNumberRatio(x) {
     }
 }
 
+function formatCountry(country) {
+    return country.substring(0, 7) + (country.length > 7 ? "." : "");
+}
+
 function formatMatch(match) {
     var formatted = []
-    for (var d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+    for (var d = new Date(minDate_dt); d <= maxDate_dt; d.setDate(d.getDate() + 1)) {
         formatted.push({date: new Date(d), value: match[timeToString(d)]});
     }
     return formatted
@@ -160,7 +164,7 @@ function timeSlider(svg, path, coutries_data) {
     var formatDateIntoYearMonth = d3.timeFormat("%b %Y");
     var formatDate = d3.timeFormat("%d %b");
 
-    const totalDays = (endDate - startDate) / (1000 * 3600 * 24)
+    const totalDays = (maxDate_dt - minDate_dt) / (1000 * 3600 * 24)
 
     var margin = {top: 100, right: 20, bottom: -200, left: 20},
         width = 600 - margin.left - margin.right,
@@ -178,7 +182,7 @@ function timeSlider(svg, path, coutries_data) {
     var playButton = d3.select("#play-button");
 
     var x = d3.scaleTime()
-        .domain([startDate, endDate])
+        .domain([minDate_dt, maxDate_dt])
         .range([0, targetValue])
         .clamp(true);
 
@@ -231,7 +235,7 @@ function timeSlider(svg, path, coutries_data) {
         .attr("class", "label")
         .attr("fill", "white")
         .attr("text-anchor", "middle")
-        .text(formatDate(startDate))
+        .text(formatDate(minDate_dt))
         .attr("transform", "translate(0," + (-25) + ")")
 
     playButton
@@ -274,14 +278,14 @@ function timeSlider(svg, path, coutries_data) {
     function update(h) {
         // Check the date changed
         const newDate = timeToString(h);
-        if(data.current_date != newDate && h >= startDate && h <= endDate) {
+        if(data.current_date != newDate && h >= minDate_dt && h <= maxDate_dt) {
             // Update the map
             dataset = getDatasetFromName(data.current_dataset);
             data.current_date = newDate;
             updateCountriesColor(map_svg, path, coutries_data, dataset, newDate);
             updateCountryInfo();
             updateInfoBox();
-            
+
             clearTimeout(typingTimer);
             typingTimer = setTimeout(updateGovernementInfo, 400);
         }
@@ -320,7 +324,7 @@ function displayLegend(dataSetName) {
 
     // append a defs (for definition) element to your SVG
     var svgLegend = d3.select("#legend").append('svg')
-        .attr("width", 100)
+        .attr("width", 120)
         .attr("height", 600);
 
     var defs = svgLegend.append('defs');
@@ -361,18 +365,16 @@ function displayLegend(dataSetName) {
 
     // append title
     svgLegend.append("text")
-        .attr("class", "legendTitle")
+        .attr("class", "legendTitle text")
         .attr("x", 0)
         .attr("y", 20)
-        .attr("font-size", 11)
         .attr("fill", "#FFFFFF")
         .text(legendTitle[dataSetName]);
 
     svgLegend.append("text")
-        .attr("class", "legendTitle")
+        .attr("class", "legendTitle text")
         .attr("x", 0)
         .attr("y", 35)
-        .attr("font-size", 11)
         .attr("fill", "#FFFFFF")
         .text("ratio to population");
 
@@ -424,11 +426,12 @@ function displayLegend(dataSetName) {
         .attr("text-anchor", "start");
 
     svgLegend.selectAll(".tick text")
+     .attr("class", "text-small")
      .attr("x","5px");
 
     // No data text
     svgLegend.append("text")
-        .attr("class", "legendTitle")
+        .attr("class", "legendTitle text")
         .attr("x", 30)
         .attr("y", 591)
         .attr("fill", "#FFFFFF")
@@ -489,7 +492,7 @@ function arraysEqual(a, b) {
     if (a === b) return true;
     if (a == null || b == null) return false;
     if (a.length != b.length) return false;
-  
+
     for (var i = 0; i < a.length; ++i) {
       if (a[i] !== b[i]) return false;
     }
@@ -522,7 +525,7 @@ function updateGovernementInfo() {
         let text = gov_info_svg.selectAll("text")
                 .data(gov_data, d => d);
 
-        let space = 18;   
+        let space = 18;
 
         text.enter()
         .append("text")
@@ -703,10 +706,10 @@ function plotCountry() {
 
     // Add X axis --> it is a date format
     var x = d3.scaleTime()
-        .domain([startDate, endDate])
+        .domain([minDate_dt, maxDate_dt])
         .range([0, width]);
     svg.append("g")
-        .attr("class", "whiteContent")
+        .attr("class", "whiteContent text-small")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x).ticks(ticksCount));
 
@@ -732,7 +735,7 @@ function plotCountry() {
     y = y.range([height, 0]);
 
     svg.append("g")
-        .attr("class", "whiteContent")
+        .attr("class", "whiteContent  text-small")
         .call(d3.axisLeft(y).tickFormat((value,_) => (percentScale ? formatNumberRatio(value) : formatNumberWithCommas(value))));
 
     // This allows to find the closest X index of the mouse:
@@ -864,7 +867,9 @@ function plotCountry() {
             .attr("cx", x(selectedData.date))
             .attr("cy", country1Val);
         focusText1
-            .html(data.country_1 + ", " + d3.timeFormat("%d %b")(selectedData.date) + ": " + (percentScale ? formatNumberRatio(selectedData.value): formatNumberWithCommas(selectedData.value)))
+            .html(formatCountry(data.country_1)
+            + ", " + d3.timeFormat("%d %b")(selectedData.date)
+            + ": " + (percentScale ? formatNumberRatio(selectedData.value): formatNumberWithCommas(selectedData.value)))
             .attr("x", x(selectedData.date))
             .attr("y", yAxisFunction(selectedData));
         selectedData = matchRowsCountry2[i];
@@ -874,7 +879,9 @@ function plotCountry() {
             .attr("cx", x(selectedData.date))
             .attr("cy", country2Val);
         focusText2
-            .html(data.country_2 + ", " + d3.timeFormat("%d %b")(selectedData.date) + ": " + (percentScale ? formatNumberRatio(selectedData.value): formatNumberWithCommas(selectedData.value)))
+            .html(formatCountry(data.country_2)
+            + ", " + d3.timeFormat("%d %b")(selectedData.date)
+            + ": " + (percentScale ? formatNumberRatio(selectedData.value): formatNumberWithCommas(selectedData.value)))
             .attr("x", x(selectedData.date))
             .attr("y", yAxisFunction(selectedData));
 
@@ -912,6 +919,21 @@ function changeDataset(dataset_name) {
     updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(dataset_name), data.current_date);
     displayLegend(data.current_dataset);
     plotCountry();
+}
+
+function changeDate(number_days) {
+		current_dt = new Date(data.current_date)
+		current_dt.setDate(current_dt.getDate() + number_days)
+		if (current_dt > maxDate_dt || current_dt < minDate_dt)
+				return
+
+		data.current_date = d3.timeFormat("%Y-%m-%d")(current_dt)
+		var map_svg = d3.select("#map").select('svg')
+
+		updateSlider()
+		updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(data.current_dataset), data.current_date);
+		updateCountryInfo();
+		updateInfoBox();
 }
 
 window.addEventListener('mousemove', function(e){

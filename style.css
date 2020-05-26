@@ -1,20 +1,67 @@
 body {
-	font-family: "avenir next", Arial, sans-serif;
-	font-size: 12px;
+	font-family: 'Roboto', sans-serif; /* For normal text */
+	font-size: 14px;
+	font-weight: 400;
 	color: #696969;
 	background: #2f313b;
+}
+
+button {
+	font-family : inherit;
+	font-size: inherit;
+	font-weight: inherit;
+}
+
+.title {
+	font-family: 'Roboto', sans-serif; /* For titles */
+	font-weight: 900;
+	font-size: 16px;
+}
+
+.text {
+	font-family: 'Roboto', sans-serif; /* For normal text */
+	font-weight: 400;
+	font-size: 14px;
+}
+
+.text-small {
+	font-family: 'Roboto', sans-serif; /* For smaller text, for example axis */
+	font-weight: 400;
+	font-size: 12px;
 }
 
 .info_country_container {
 	display: flex;
 	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
 	font-size: 16px;
 	color: white;
 }
 
-.mapContainer, .sliderContainer {
+.mapContainer {
+	display: flex;
+	justify-content: space-between;
+	align-items: stretch;
+}
+
+.buttonsForMapContainer {
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
+	flex-direction: row;
+}
+
+.timeControlContainer {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-start;
+		/* padding: 0 30px; */
+}
+
+#legend, .info_country_container {
+	padding: 83px 0;
 }
 
 #play-button {
@@ -52,8 +99,14 @@ body {
 	box-shadow: 0px 0px 0.7rem black;
 }
 
+
+.arrow {
+	margin-left: 3px;
+	margin-right: 3px;
+}
+
 .ticks {
-	font-size: 10px;
+	font-size: 12px;
 }
 
 .track,
@@ -151,4 +204,8 @@ body {
 .graph_scales {
 	display: flex;
 	align-items: center;
+}
+
+.graph_scale {
+	margin-left: 50px;
 }
