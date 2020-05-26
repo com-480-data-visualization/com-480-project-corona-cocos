@@ -1,6 +1,7 @@
 body {
 	font-family: 'Roboto', sans-serif; /* For normal text */
 	font-size: 14px;
+	font-weight: 400;
 	color: #696969;
 	background: #2f313b;
 }
@@ -8,20 +9,24 @@ body {
 button {
 	font-family : inherit;
 	font-size: inherit;
+	font-weight: inherit;
 }
 
 .title {
-	font-family: 'Bebas Neue', cursive; /* For titles */
+	font-family: 'Roboto', sans-serif; /* For titles */
+	font-weight: 900;
 	font-size: 16px;
 }
 
 .text {
 	font-family: 'Roboto', sans-serif; /* For normal text */
+	font-weight: 400;
 	font-size: 14px;
 }
 
 .text-small {
 	font-family: 'Roboto', sans-serif; /* For smaller text, for example axis */
+	font-weight: 400;
 	font-size: 12px;
 }
 
