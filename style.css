@@ -8,16 +8,26 @@ body {
 .info_country_container {
 	display: flex;
 	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
 	font-size: 16px;
 	color: white;
 }
 
 .sliderContainer {
-	margin-left: 110px;
-}
-.mapContainer, .sliderContainer {
 	display: flex;
 	align-items: center;
+	margin-left: 110px;
+}
+.mapContainer {
+	display: flex;
+	justify-content: space-between;
+	align-items: stretch;
+}
+
+.mapAndLegendContainer {
+	display: flex;
+	flex-direction: row;
 }
 
 #play-button {
@@ -55,13 +65,14 @@ body {
 	box-shadow: 0px 0px 0.7rem black;
 }
 
+
 .arrow {
 	margin-left: 3px;
 	margin-right: 3px;
 }
 
 .ticks {
-	font-size: 10px;
+	font-size: 12px;
 }
 
 .track,

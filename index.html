@@ -1,93 +1,96 @@
 <!DOCTYPE html>
 <html lang='en'>
-<head>
-    <meta charset="utf-8">
-    <title>Coronavirus Evolution</title>
-    <meta name="author" content="Nicolas Zimmermann, Lucien Iseli and Jules Gottraux">
+	<head>
+		<meta charset="utf-8">
+		<title>Coronavirus Evolution</title>
+		<meta name="author" content="Nicolas Zimmermann, Lucien Iseli and Jules Gottraux">
 
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/d3-simple-slider"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script type="text/javascript" src="https://d3js.org/topojson.v1.min.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="icon.svg">
-</head>
-<body>
-<div class="sliderContainer">
-    <button id="play-button">Play</button>
-		<img class='arrow' src="images/arrow-left.png" height="30px" onclick="ChangeDate(1)">
-		<img class='arrow' src="images/arrow-right.png" height="30px" onclick="ChangeDate(-1)">
-    <div id="slider"></div>
-    <div class="dropdown">
-        <button class="dropdownButton" id="zoomDropdownButton">Focus: World</button>
-        <div class="dropdown-content">
-            <a id="worldButton" type="button" onclick="continentZoom(this.id)">World</a>
-            <a id="euButton" type="button" onclick="continentZoom(this.id)">Europe</a>
-            <a id="asiaButton" type="button" onclick="continentZoom(this.id)">Asia</a>
-            <a id="naButton" type="button" onclick="continentZoom(this.id)">North America</a>
-            <a id="saButton" type="button" onclick="continentZoom(this.id)">South America</a>
-            <a id="afrButton" type="button" onclick="continentZoom(this.id)">Africa</a>
-            <a id="ocButton" type="button" onclick="continentZoom(this.id)">Oceania</a>
-        </div>
-    </div>
-    <div class="dropdown">
-        <button class="dropdownButton" id="datasetDropdownButton">Data: Confirmed</button>
-        <div class="dropdown-content">
-            <a id="confirmed" type="button" onClick="changeDataset(this.id)">Confirmed</a>
-            <a id="deaths" type="button" onClick="changeDataset(this.id)">Deaths</a>
-            <a id="recovered" type="button" onClick="changeDataset(this.id)">Recovered</a>
-            <a id="sick" type="button" onClick="changeDataset(this.id)">Active cases</a>
-        </div>
-    </div>
-</div>
-<div class="mapContainer">
-    <div id="legend"></div>
-    <div id="map"></div>
-    <div id="info_box">
-        <div id="info_box_name">World</div>
-        <div id="info_box_confirmed">Confirmed: x</div>
-        <div id="info_box_deaths">Deaths: x</div>
-        <div id="info_box_recovered">Recovered: x</div>
-        <div id="info_box_active_cases">Active cases: x</div>
-    </div>
-    <div class="info_country_container">
-        <table style="width:350px">
-            <tr>
-                <th></th>
-                <th class="count_cases" id="info_country1_name"></th>
-                <th class="count_cases" id="info_country2_name"></th>
-            </tr>
-            <tr>
-                <td>Confirmed</td>
-                <td class="count_cases" id="info_country1_confirmed"></td>
-                <td class="count_cases" id="info_country2_confirmed"></td>
-            </tr>
-            <tr>
-                <td>Deaths</td>
-                <td class="count_cases" id="info_country1_deaths"></td>
-                <td class="count_cases" id="info_country2_deaths"></td>
-            </tr>
-            <tr>
-                <td>Recovered</td>
-                <td class="count_cases" id="info_country1_recovered"></td>
-                <td class="count_cases" id="info_country2_recovered"></td>
-            </tr>
-            <tr>
-                <td>Active cases</td>
-                <td class="count_cases" id="info_country1_active_cases"></td>
-                <td class="count_cases" id="info_country2_active_cases"></td>
-            </tr>
-        </table>
-        <div id="graph"></div>
-				<!---<div id="gov-measures"></div>-->
-        <div class="graph_scales">
-            <div class="graph_scale"><input id="radio-log" type="radio" name="optradio" onclick="plotCountry()" checked>Log-scale</div>
-            <div class="graph_scale"><input id="radio-linear" type="radio" name="optradio" onclick="plotCountry()">Linear</div>
-        </div>
-    </div>
-</div>
-<div id="gov_info_1"></div>
-<div id="gov_info_2"></div>
-<script type="text/javascript" src="visualization.js"></script>
-</body>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+		<script type="text/javascript" src="https://unpkg.com/d3-simple-slider"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script type="text/javascript" src="https://d3js.org/topojson.v1.min.js"></script>
+		<link rel="stylesheet" href="style.css">
+		<link rel="icon" href="icon.svg">
+	</head>
+	<body>
+		<div class="sliderContainer">
+			<button id="play-button">Play</button>
+			<img class='arrow' src="images/arrow-left.png" height="30px" onclick="ChangeDate(1)">
+			<img class='arrow' src="images/arrow-right.png" height="30px" onclick="ChangeDate(-1)">
+			<div id="slider"></div>
+			<div class="dropdown">
+				<button class="dropdownButton" id="zoomDropdownButton">Focus: World</button>
+				<div class="dropdown-content">
+					<a id="worldButton" type="button" onclick="continentZoom(this.id)">World</a>
+					<a id="euButton" type="button" onclick="continentZoom(this.id)">Europe</a>
+					<a id="asiaButton" type="button" onclick="continentZoom(this.id)">Asia</a>
+					<a id="naButton" type="button" onclick="continentZoom(this.id)">North America</a>
+					<a id="saButton" type="button" onclick="continentZoom(this.id)">South America</a>
+					<a id="afrButton" type="button" onclick="continentZoom(this.id)">Africa</a>
+					<a id="ocButton" type="button" onclick="continentZoom(this.id)">Oceania</a>
+				</div>
+			</div>
+			<div class="dropdown">
+				<button class="dropdownButton" id="datasetDropdownButton">Data: Confirmed</button>
+				<div class="dropdown-content">
+					<a id="confirmed" type="button" onClick="changeDataset(this.id)">Confirmed</a>
+					<a id="deaths" type="button" onClick="changeDataset(this.id)">Deaths</a>
+					<a id="recovered" type="button" onClick="changeDataset(this.id)">Recovered</a>
+					<a id="sick" type="button" onClick="changeDataset(this.id)">Active cases</a>
+				</div>
+			</div>
+		</div>
+		<div class="mapContainer">
+			<div id="legend"></div>
+			<div id="map"></div>
+			<div id="info_box">
+				<div id="info_box_name">World</div>
+				<div id="info_box_confirmed">Confirmed: x</div>
+				<div id="info_box_deaths">Deaths: x</div>
+				<div id="info_box_recovered">Recovered: x</div>
+				<div id="info_box_active_cases">Active cases: x</div>
+			</div>
+			<div class="info_country_container">
+				<div>
+					<table style="width:350px">
+						<tr>
+							<th></th>
+							<th class="count_cases" id="info_country1_name"></th>
+							<th class="count_cases" id="info_country2_name"></th>
+						</tr>
+						<tr>
+							<td>Confirmed</td>
+							<td class="count_cases" id="info_country1_confirmed"></td>
+							<td class="count_cases" id="info_country2_confirmed"></td>
+						</tr>
+						<tr>
+							<td>Deaths</td>
+							<td class="count_cases" id="info_country1_deaths"></td>
+							<td class="count_cases" id="info_country2_deaths"></td>
+						</tr>
+						<tr>
+							<td>Recovered</td>
+							<td class="count_cases" id="info_country1_recovered"></td>
+							<td class="count_cases" id="info_country2_recovered"></td>
+						</tr>
+						<tr>
+							<td>Active cases</td>
+							<td class="count_cases" id="info_country1_active_cases"></td>
+							<td class="count_cases" id="info_country2_active_cases"></td>
+						</tr>
+					</table>
+				</div>
+				<div>
+					<div id="graph"></div>
+					<div class="graph_scales">
+						<div class="graph_scale"><input id="radio-log" type="radio" name="optradio" onclick="plotCountry()" checked>Log-scale</div>
+						<div class="graph_scale"><input id="radio-linear" type="radio" name="optradio" onclick="plotCountry()">Linear</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="gov_info_1"></div>
+		<div id="gov_info_2"></div>
+		<script type="text/javascript" src="visualization.js"></script>
+	</body>
 </html>
