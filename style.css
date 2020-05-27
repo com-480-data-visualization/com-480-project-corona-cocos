@@ -2,7 +2,7 @@ body {
 	font-family: 'Roboto', sans-serif; /* For normal text */
 	font-size: 14px;
 	font-weight: 400;
-	color: #696969;
+	color: white;
 	background: #2f313b;
 }
 
@@ -97,6 +97,7 @@ button {
 	padding: 0.5rem;
 	border-radius: 1rem;
 	box-shadow: 0px 0px 0.7rem black;
+	color: #696969;
 }
 
 
