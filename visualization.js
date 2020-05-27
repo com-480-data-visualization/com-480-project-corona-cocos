@@ -952,8 +952,8 @@ d3.csv('./generated/sick.csv', sick_data => {
     data.sick = sick_data;
     data.current_dataset = 'sick';
     data.current_date = minDate;
-    data.country_1 = "World";
-    data.country_2 = "Switzerland";
+    data.country_1 = "Switzerland";
+    data.country_2 = "France";
 
     d3.csv('./generated/deaths.csv', deaths_data => {
         data.deaths = deaths_data;
@@ -984,6 +984,8 @@ d3.csv('./generated/sick.csv', sick_data => {
                         data.countries_data = countries_data;
             
                         continentZoom('worldButton');
+                        data.country_1 = "Switzerland";
+                        data.country_2 = "France";
             
                         displayCountries(map_svg, world_path, countries_data, sick_data, minDate);
                         displayLegend(data.current_dataset);
@@ -991,6 +993,7 @@ d3.csv('./generated/sick.csv', sick_data => {
                         plotCountry();
                         updateCountryInfoNameAndPopulation();
                         updateCountryInfo();
+                        updateGovernementInfo();
                     }
                 })
             })
