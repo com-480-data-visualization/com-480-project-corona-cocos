@@ -62,7 +62,15 @@ button {
 }
 
 #legend, .info_country_container {
-	padding: 83px 0px;
+	padding-top: 90px;
+}
+
+#legend {
+	margin-right: 40px;
+}
+
+.info_country_container {
+	margin-left: 40px;
 }
 
 #play-button {

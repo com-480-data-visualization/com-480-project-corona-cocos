@@ -130,6 +130,7 @@ function continentZoom(idButton) {
         data.country_1 = region;
     }
     plotCountry();
+    updateCountryInfoNameAndPopulation()
     updateCountryInfo();
 }
 
@@ -593,6 +594,7 @@ function updateCountriesColor(svg, path, coutries_data, dataset, date) {
             }
 
             plotCountry();
+            updateCountryInfoNameAndPopulation()
             updateCountryInfo();
             updateGovernementInfo();
         })
@@ -638,18 +640,24 @@ function mouseOutCountry(country) {
     updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(data.current_dataset), data.current_date);
 }
 
-function updateCountryInfo() {
+function updateCountryInfoNameAndPopulation() {
     d3.select("#info_country1_name").text(data.country_1)
-    d3.select("#info_country1_confirmed").text(formatNumberWithCommas(getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
-    d3.select("#info_country1_deaths").text(formatNumberWithCommas(getDatasetFromName('deaths').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
-    d3.select("#info_country1_recovered").text(formatNumberWithCommas(getDatasetFromName('recovered').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
-    d3.select("#info_country1_active_cases").text(formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
+    d3.select("#info_country1_population").text(formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.country_1)[0]['population']))
 
     d3.select("#info_country2_name").text(data.country_2)
-    d3.select("#info_country2_confirmed").text(formatNumberWithCommas(getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
+    d3.select("#info_country2_population").text(formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.country_2)[0]['population']))
+}
+
+function updateCountryInfo() {
+    d3.select("#info_country1_active_cases").text(formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
+    d3.select("#info_country1_deaths").text(formatNumberWithCommas(getDatasetFromName('deaths').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
+    d3.select("#info_country1_recovered").text(formatNumberWithCommas(getDatasetFromName('recovered').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
+    d3.select("#info_country1_confirmed").text(formatNumberWithCommas(getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.country_1)[0][data.current_date]))
+
+    d3.select("#info_country2_active_cases").text(formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
     d3.select("#info_country2_deaths").text(formatNumberWithCommas(getDatasetFromName('deaths').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
     d3.select("#info_country2_recovered").text(formatNumberWithCommas(getDatasetFromName('recovered').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
-    d3.select("#info_country2_active_cases").text(formatNumberWithCommas(getDatasetFromName('sick').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
+    d3.select("#info_country2_confirmed").text(formatNumberWithCommas(getDatasetFromName('confirmed').filter(row => row['Country/Region'] === data.country_2)[0][data.current_date]))
 }
 
 function plotCountry() {
@@ -945,50 +953,55 @@ window.addEventListener('mousemove', function(e){
 });
 
 const data = {}
-d3.csv('./generated/confirmed.csv', confirmed_data => {
-    data.confirmed = confirmed_data;
-    data.current_dataset = 'confirmed';
+d3.csv('./generated/sick.csv', sick_data => {
+    data.sick = sick_data;
+    data.current_dataset = 'sick';
     data.current_date = minDate;
     data.country_1 = "Switzerland";
-    data.country_2 = "World";
+    data.country_2 = "France";
 
     d3.csv('./generated/deaths.csv', deaths_data => {
         data.deaths = deaths_data;
+
+        d3.csv('./generated/recovered.csv', recovered_data => {
+            data.recovered = recovered_data;
+    
+            d3.csv('./generated/confirmed.csv', confirmed_data => {
+                data.confirmed = confirmed_data;
+        
+                d3.csv('./generated/governments-measures.csv', gov_data => {
+                    data.measures = gov_data
+                    data.measures.map(m => m.date_dt = new Date(m.date));
+
+                    d3.queue()
+                        .defer(d3.json, "world.topojson")
+                        .await(ready)
+            
+                    const projection = d3.geoMercator()
+                        .scale(100);
+            
+                    const world_path = d3.geoPath()
+                        .projection(projection);
+                    data.world_path = world_path
+            
+                    function ready(error, world_data) {
+                        const countries_data = topojson.feature(world_data, world_data.objects.countries).features;
+                        data.countries_data = countries_data;
+            
+                        continentZoom('worldButton');
+                        data.country_1 = "Switzerland";
+                        data.country_2 = "France";
+            
+                        displayCountries(map_svg, world_path, countries_data, sick_data, minDate);
+                        displayLegend(data.current_dataset);
+                        timeSlider(map_svg, world_path, countries_data, sick_data);
+                        plotCountry();
+                        updateCountryInfoNameAndPopulation();
+                        updateCountryInfo();
+                        updateGovernementInfo();
+                    }
+                })
+            })
+        })
     })
-    d3.csv('./generated/recovered.csv', recovered_data => {
-        data.recovered = recovered_data;
-    })
-    d3.csv('./generated/sick.csv', sick_data => {
-        data.sick = sick_data;
-    })
-		d3.csv('./generated/governments-measures.csv', gov_data => {
-				data.measures = gov_data
-				data.measures.map(m => m.date_dt = new Date(m.date));
-		})
-    d3.queue()
-        .defer(d3.json, "world.topojson")
-        .await(ready)
-
-    const projection = d3.geoMercator()
-        .scale(100);
-
-    const world_path = d3.geoPath()
-        .projection(projection);
-    data.world_path = world_path
-
-    function ready(error, world_data) {
-        const countries_data = topojson.feature(world_data, world_data.objects.countries).features;
-        data.countries_data = countries_data;
-        data.current_dataset = 'confirmed';
-
-        continentZoom('worldButton');
-        data.country_1 = "Switzerland";
-        data.country_2 = "World";
-
-        displayCountries(map_svg, world_path, countries_data, confirmed_data, minDate);
-        displayLegend(data.current_dataset);
-        timeSlider(map_svg, world_path, countries_data, confirmed_data);
-        plotCountry();
-        updateCountryInfo();
-    }
 })
