@@ -41,8 +41,9 @@ button {
 
 .mapContainer {
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-start;
 	align-items: stretch;
+	padding-right: 100px;
 }
 
 .buttonsForMapContainer {
@@ -61,7 +62,7 @@ button {
 }
 
 #legend, .info_country_container {
-	padding: 83px 0;
+	padding: 83px 0px;
 }
 
 #play-button {

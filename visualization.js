@@ -254,6 +254,7 @@ function timeSlider(svg, path, coutries_data) {
         })
 
     function step() {
+				console.log(x.invert(currentValue))
         update(x.invert(currentValue));
         currentValue = currentValue + (targetValue / totalDays);
         if (currentValue > targetValue) {
@@ -265,17 +266,8 @@ function timeSlider(svg, path, coutries_data) {
         }
     }
 
-    updateSlider = _ => {
-        const newDate = new Date(data.current_date);
-
-        // update position and text of label according to slider scale
-        handle.attr("cx", x(newDate));
-        label
-            .attr("x", x(newDate))
-            .text(formatDate(newDate));
-    }
-
     function update(h) {
+				console.log(h)
         // Check the date changed
         const newDate = timeToString(h);
         if(data.current_date != newDate && h >= minDate_dt && h <= maxDate_dt) {
@@ -290,6 +282,7 @@ function timeSlider(svg, path, coutries_data) {
             typingTimer = setTimeout(updateGovernementInfo, 400);
         }
     }
+    updateSlider = _ => update(new Date(data.current_date))
 }
 
 /**
