@@ -166,9 +166,9 @@ function timeSlider(svg, path, coutries_data) {
 
     const totalDays = (maxDate_dt - minDate_dt) / (1000 * 3600 * 24)
 
-    var margin = {top: 100, right: 20, bottom: -200, left: 20},
+    var margin = {top: 100, right: 30, bottom: -238, left: 30},
         width = 600 - margin.left - margin.right,
-        height = 80 - margin.top - margin.bottom;
+        height = 90 - margin.top - margin.bottom;
 
     var svgSlider = d3.select("#slider")
         .append("svg")
@@ -236,7 +236,7 @@ function timeSlider(svg, path, coutries_data) {
         .attr("fill", "white")
         .attr("text-anchor", "middle")
         .text(formatDate(minDate_dt))
-        .attr("transform", "translate(0," + (-25) + ")")
+        .attr("transform", "translate(0," + (-20) + ")")
 
     playButton
         .on("click", function () {
@@ -400,10 +400,10 @@ function displayLegend(dataSetName) {
         "sick": 5,
     };
     const tickLabels = {
-        "confirmed":["1/1,000,000","10/1,000,000","100/1,000,000","1/1000", "10/1000"],
-        "deaths":["1/1,000,000","10/1,000,000","100/1,000,000","1/1000"],
-        "recovered":["1/1,000,000","10/1,000,000","100/1,000,000","1/1000"],
-        "sick":["1/1,000,000","10/1,000,000","100/1,000,000","1/1000", "10/1000"],
+        "confirmed":["1 / 1,000,000","1 / 100,000","1 / 10,000","1 / 1000", "1 / 100"],
+        "deaths":["1 / 1,000,000","1 / 100,000","1 / 10,000","1 / 1000"],
+        "recovered":["1 / 1,000,000","1 / 100,000","1 / 10,000","1 / 1000"],
+        "sick":["1 / 1,000,000","1 / 100,000","1 / 10,000","1 / 1000", "1 / 100"],
     };
     const tickValues = {
         "confirmed":[1/1000000.0,10/1000000.0,100/1000000.0,1/1000.0, 10/1000.0],
@@ -689,7 +689,7 @@ function plotCountry() {
     );
 
     // set the dimensions and margins of the graph
-    var margin = {top: 20, right: 30, bottom: 30, left: 90},
+    var margin = {top: 30, right: 30, bottom: 30, left: 90},
         width = 460 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
@@ -731,7 +731,7 @@ function plotCountry() {
     } else {
         y = y.domain([0, maxValue])
     }
-    
+
     y = y.range([height, 0]);
 
     svg.append("g")
