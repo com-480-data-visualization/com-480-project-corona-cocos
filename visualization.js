@@ -166,9 +166,9 @@ function timeSlider(svg, path, coutries_data) {
 
     const totalDays = (maxDate_dt - minDate_dt) / (1000 * 3600 * 24)
 
-    var margin = {top: 100, right: 20, bottom: -200, left: 20},
+    var margin = {top: 100, right: 30, bottom: -238, left: 30},
         width = 600 - margin.left - margin.right,
-        height = 80 - margin.top - margin.bottom;
+        height = 90 - margin.top - margin.bottom;
 
     var svgSlider = d3.select("#slider")
         .append("svg")
@@ -236,7 +236,7 @@ function timeSlider(svg, path, coutries_data) {
         .attr("fill", "white")
         .attr("text-anchor", "middle")
         .text(formatDate(minDate_dt))
-        .attr("transform", "translate(0," + (-25) + ")")
+        .attr("transform", "translate(0," + (-20) + ")")
 
     playButton
         .on("click", function () {
@@ -731,7 +731,7 @@ function plotCountry() {
     } else {
         y = y.domain([0, maxValue])
     }
-    
+
     y = y.range([height, 0]);
 
     svg.append("g")

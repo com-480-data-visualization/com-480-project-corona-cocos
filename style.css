@@ -204,8 +204,10 @@ button {
 .graph_scales {
 	display: flex;
 	align-items: center;
+	justify-content: flex-end;
+	margin-right: 25px;
 }
 
 .graph_scale {
-	margin-left: 50px;
+	margin-left: 3px;
 }
