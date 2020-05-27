@@ -689,7 +689,7 @@ function plotCountry() {
     );
 
     // set the dimensions and margins of the graph
-    var margin = {top: 20, right: 30, bottom: 30, left: 90},
+    var margin = {top: 30, right: 30, bottom: 30, left: 90},
         width = 460 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
