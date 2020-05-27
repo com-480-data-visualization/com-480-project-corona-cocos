@@ -1,5 +1,5 @@
-const minDate = "2020-01-23";
-const maxDate = "2020-05-20";
+const minDate = "2020-01-22";
+const maxDate = "2020-05-26";
 const minDate_dt = new Date(minDate);
 const maxDate_dt = new Date(maxDate);
 const ticksCount = 5;
@@ -336,9 +336,9 @@ function displayLegend(dataSetName) {
     // append multiple color stops by using D3's data/enter step
     linearGradient.selectAll("stop")
         .data([
-            {offset: "0%", color: "#FFFFFF"},
+            {offset: "0%", color: "#000000"},
             {offset: "50%", color: "#FF0000"},
-            {offset: "100%", color: "#000000"}
+            {offset: "100%", color: "#FFFFFF"}
         ])
         .enter().append("stop")
         .attr("offset", function (d) {
@@ -381,7 +381,7 @@ function displayLegend(dataSetName) {
 
     //create tick marks
     var xLeg = d3.scaleLog()
-        .domain([1 / 1000000, (max - 1) / 1000000])
+        .domain([(max - 1) / 1000000, 1 / 1000000])
         .range([10, 515]) // This is where the axis is placed: from 10 px to 400px
         .base(2);
 
@@ -394,15 +394,15 @@ function displayLegend(dataSetName) {
     };
     const tickLabels = {
         "confirmed":["1 / 1,000,000","1 / 100,000","1 / 10,000","1 / 1000", "1 / 100"],
-        "deaths":["1 / 1,000,000","1 / 100,000","1 / 10,000","1 / 1000"],
+        "deaths":   ["1 / 1,000,000","1 / 100,000","1 / 10,000","1 / 1000"],
         "recovered":["1 / 1,000,000","1 / 100,000","1 / 10,000","1 / 1000"],
-        "sick":["1 / 1,000,000","1 / 100,000","1 / 10,000","1 / 1000", "1 / 100"],
+        "sick":     ["1 / 1,000,000","1 / 100,000","1 / 10,000","1 / 1000", "1 / 100"],
     };
     const tickValues = {
-        "confirmed":[1/1000000.0,10/1000000.0,100/1000000.0,1/1000.0, 10/1000.0],
-        "deaths":[1/1000000.0,10/1000000.0,100/1000000.0,1/1000.0],
-        "recovered":[1/1000000.0,10/1000000.0,100/1000000.0,1/1000.0],
-        "sick":[1/1000000.0,10/1000000.0,100/1000000.0,1/1000.0, 10/1000.0],
+        "confirmed":[1/1000000.0,1/100000.0,1/10000.0,1/1000.0, 1/100.0],
+        "deaths":   [1/1000000.0,1/100000.0,1/10000.0,1/1000.0],
+        "recovered":[1/1000000.0,1/100000.0,1/10000.0,1/1000.0],
+        "sick":     [1/1000000.0,1/100000.0,1/10000.0,1/1000.0, 1/100.0],
     };
 
     var x2 = d3.axisLeft(xLeg)
