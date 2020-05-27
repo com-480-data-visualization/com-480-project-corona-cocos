@@ -30,7 +30,7 @@ Links for this milestone:
 
 Links for this milestone:
 - [Process book TODO LINK](./Milestone-2.pdf) synthesizing the project
-- [ScreenCast](https://www.youtube.com/watch?v=beJLn3VxRfI)
+- [ScreenCast](https://www.youtube.com/watch?v=beJLn3VxRfI) presenting the visualization in video
 - [Website](https://com-480-data-visualization.github.io/com-480-project-corona-cocos/) for this project
 
 **80% of the final grade**
