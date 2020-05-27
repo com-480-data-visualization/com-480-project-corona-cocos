@@ -244,30 +244,25 @@ function timeSlider(svg, path, coutries_data) {
             if (button.text() === "Pause") {
                 moving = false;
                 clearInterval(timer);
-                // timer = 0;
                 button.text("Play");
             } else {
                 moving = true;
-                timer = setInterval(step, 500);
+
+                const addDayAndStop = function() {
+                    changeDate(1);
+                    if (data.current_date === maxDate) {
+                        moving = false;
+                        clearInterval(timer);
+                        button.text("Play");
+                    }
+                }
+
+                timer = setInterval(addDayAndStop, 500);
                 button.text("Pause");
             }
         })
 
-    function step() {
-				console.log(x.invert(currentValue))
-        update(x.invert(currentValue));
-        currentValue = currentValue + (targetValue / totalDays);
-        if (currentValue > targetValue) {
-            moving = false;
-            currentValue = 0;
-            clearInterval(timer);
-            // timer = 0;
-            playButton.text("Play");
-        }
-    }
-
     function update(h) {
-				console.log(h)
         // Check the date changed
         const newDate = timeToString(h);
         if(data.current_date != newDate && h >= minDate_dt && h <= maxDate_dt) {
@@ -282,7 +277,16 @@ function timeSlider(svg, path, coutries_data) {
             typingTimer = setTimeout(updateGovernementInfo, 400);
         }
     }
-    updateSlider = _ => update(new Date(data.current_date))
+
+    updateSlider = _ => {
+        const newDate = new Date(data.current_date);
+
+        // update position and text of label according to slider scale
+        handle.attr("cx", x(newDate));
+        label
+            .attr("x", x(newDate))
+            .text(formatDate(newDate));
+    }
 }
 
 /**
@@ -915,28 +919,29 @@ function changeDataset(dataset_name) {
 }
 
 function changeDate(number_days) {
-		current_dt = new Date(data.current_date)
-		current_dt.setDate(current_dt.getDate() + number_days)
-		if (current_dt > maxDate_dt || current_dt < minDate_dt)
-				return
+    let current_dt = new Date(data.current_date);
+    current_dt.setDate(current_dt.getDate() + number_days);
+    if (current_dt > maxDate_dt || current_dt < minDate_dt)
+            return;
 
-		data.current_date = d3.timeFormat("%Y-%m-%d")(current_dt)
-		var map_svg = d3.select("#map").select('svg')
+    data.current_date = d3.timeFormat("%Y-%m-%d")(current_dt);
 
-		updateSlider()
-		updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(data.current_dataset), data.current_date);
-		updateCountryInfo();
-		updateInfoBox();
+    updateCountriesColor(map_svg, data.world_path, data.countries_data, getDatasetFromName(data.current_dataset), data.current_date);
+    updateCountryInfo();
+    updateInfoBox();
+    
+    clearTimeout(typingTimer);
+    updateGovernementInfo();
 }
 
 window.addEventListener('mousemove', function(e){
     var width = document.getElementById('info_box').offsetWidth;
     var height = document.getElementById('info_box').offsetHeight;
-    var left = e.pageX - width/2
-    var top = e.pageY - height - 8
+    var left = e.pageX - width / 2;
+    var top = e.pageY - height - 8;
 
-    document.getElementById('info_box').style.left = `${left}px`
-    document.getElementById('info_box').style.top = `${top}px`
+    document.getElementById('info_box').style.left = `${left}px`;
+    document.getElementById('info_box').style.top = `${top}px`;
 });
 
 const data = {}
