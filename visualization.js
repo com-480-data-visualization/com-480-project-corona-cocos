@@ -132,6 +132,7 @@ function continentZoom(idButton) {
     plotCountry();
     updateCountryInfoNameAndPopulation()
     updateCountryInfo();
+    updateGovernementInfo()
 }
 
 function hslToHex(h, s, l) {
