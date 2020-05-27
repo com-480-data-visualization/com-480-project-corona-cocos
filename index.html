@@ -37,22 +37,22 @@
 						</div>
 					</div>
 					<div class="dropdown text">
-						<button class="dropdownButton" id="datasetDropdownButton">Data: Confirmed</button>
+						<button class="dropdownButton" id="datasetDropdownButton">Data: Active cases</button>
 						<div class="dropdown-content">
-							<a id="confirmed" type="button" onClick="changeDataset(this.id)">Confirmed</a>
-							<a id="deaths" type="button" onClick="changeDataset(this.id)">Deaths</a>
-							<a id="recovered" type="button" onClick="changeDataset(this.id)">Recovered</a>
 							<a id="sick" type="button" onClick="changeDataset(this.id)">Active cases</a>
+							<a id="recovered" type="button" onClick="changeDataset(this.id)">Recovered</a>
+							<a id="deaths" type="button" onClick="changeDataset(this.id)">Deaths</a>
+							<a id="confirmed" type="button" onClick="changeDataset(this.id)">Confirmed</a>
 						</div>
 					</div>
 				</div>
 				<div id="map"></div>
 				<div id="info_box">
 					<div id="info_box_name">World</div>
-					<div id="info_box_confirmed">Confirmed: x</div>
+					<div id="info_box_active_cases">Active cases: x</div>
 					<div id="info_box_deaths">Deaths: x</div>
 					<div id="info_box_recovered">Recovered: x</div>
-					<div id="info_box_active_cases">Active cases: x</div>
+					<div id="info_box_confirmed">Confirmed: x</div>
 				</div>
 			</div>
 			<div class="info_country_container title">
@@ -64,9 +64,14 @@
 							<th class="count_cases" id="info_country2_name"></th>
 						</tr>
 						<tr>
-							<td>Confirmed</td>
-							<td class="count_cases" id="info_country1_confirmed"></td>
-							<td class="count_cases" id="info_country2_confirmed"></td>
+							<td>Population</td>
+							<td class="count_cases" id="info_country1_population"></td>
+							<td class="count_cases" id="info_country2_population"></td>
+						</tr>
+						<tr>
+							<td>Active cases</td>
+							<td class="count_cases" id="info_country1_active_cases"></td>
+							<td class="count_cases" id="info_country2_active_cases"></td>
 						</tr>
 						<tr>
 							<td>Deaths</td>
@@ -79,9 +84,9 @@
 							<td class="count_cases" id="info_country2_recovered"></td>
 						</tr>
 						<tr>
-							<td>Active cases</td>
-							<td class="count_cases" id="info_country1_active_cases"></td>
-							<td class="count_cases" id="info_country2_active_cases"></td>
+							<td>Confirmed</td>
+							<td class="count_cases" id="info_country1_confirmed"></td>
+							<td class="count_cases" id="info_country2_confirmed"></td>
 						</tr>
 					</table>
 				</div>
