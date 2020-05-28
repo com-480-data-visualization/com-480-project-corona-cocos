@@ -222,3 +222,10 @@ button {
 .graph_scale {
 	margin-left: 3px;
 }
+
+#linkGithubContainer {
+	width: 150px;
+	margin-right: 0px;
+	margin-top: 20px;
+	margin-left: auto;
+}
