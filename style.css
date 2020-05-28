@@ -207,11 +207,6 @@ button {
 	fill: #FFFFFF;
 }
 
-.count_cases {
-	text-align: center;
-	width: 100px;
-}
-
 .graph_scales {
 	display: flex;
 	align-items: center;
@@ -228,4 +223,9 @@ button {
 	margin-right: 0px;
 	margin-top: 20px;
 	margin-left: auto;
+}
+
+th, td {
+	text-align: center;
+	width: 140px;
 }
