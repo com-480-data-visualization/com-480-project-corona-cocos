@@ -29,9 +29,12 @@ Links for this milestone:
 ## Milestone 3 (Thursday 28th May, 5pm)
 
 Links for this milestone:
-- [Process book TODO LINK](./Milestone-2.pdf) synthesizing the project
+- [Process book](./process-book.pdf) overview of the project
 - [ScreenCast](https://www.youtube.com/watch?v=beJLn3VxRfI) presenting the visualization in video
 - [Website](https://com-480-data-visualization.github.io/com-480-project-corona-cocos/) for this project
 
 **80% of the final grade**
 
+## Data sources
+- Governments measures: https://www.acaps.org/covid19-government-measures-dataset
+- Cases of the COVID-19: https://github.com/CSSEGISandData/COVID-19
