@@ -81,6 +81,7 @@ button {
 	border: none;
 	color: white;
 	margin: 0;
+	margin-right: 10px;
 	padding: 0 12px;
 	width: 60px;
 	cursor: pointer;
@@ -206,11 +207,6 @@ button {
 	fill: #FFFFFF;
 }
 
-.count_cases {
-	text-align: center;
-	width: 100px;
-}
-
 .graph_scales {
 	display: flex;
 	align-items: center;
@@ -220,4 +216,16 @@ button {
 
 .graph_scale {
 	margin-left: 3px;
+}
+
+#linkGithubContainer {
+	width: 150px;
+	margin-right: 0px;
+	margin-top: 20px;
+	margin-left: auto;
+}
+
+th, td {
+	text-align: center;
+	width: 140px;
 }

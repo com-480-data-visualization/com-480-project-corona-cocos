@@ -57,52 +57,55 @@
 			</div>
 			<div class="info_country_container title">
 				<div>
-					<table style="width:350px">
+					<table>
 						<tr>
 							<th></th>
-							<th class="count_cases" id="info_country1_name"></th>
-							<th class="count_cases" id="info_country2_name"></th>
+							<th id="info_country1_name"></th>
+							<th id="info_country2_name"></th>
 						</tr>
 						<tr>
 							<td>Population</td>
-							<td class="count_cases" id="info_country1_population"></td>
-							<td class="count_cases" id="info_country2_population"></td>
+							<td id="info_country1_population"></td>
+							<td id="info_country2_population"></td>
 						</tr>
 						<tr>
 							<td>Active cases</td>
-							<td class="count_cases" id="info_country1_active_cases"></td>
-							<td class="count_cases" id="info_country2_active_cases"></td>
+							<td id="info_country1_active_cases"></td>
+							<td id="info_country2_active_cases"></td>
 						</tr>
 						<tr>
 							<td>Deaths</td>
-							<td class="count_cases" id="info_country1_deaths"></td>
-							<td class="count_cases" id="info_country2_deaths"></td>
+							<td id="info_country1_deaths"></td>
+							<td id="info_country2_deaths"></td>
 						</tr>
 						<tr>
 							<td>Recovered</td>
-							<td class="count_cases" id="info_country1_recovered"></td>
-							<td class="count_cases" id="info_country2_recovered"></td>
+							<td id="info_country1_recovered"></td>
+							<td id="info_country2_recovered"></td>
 						</tr>
 						<tr>
 							<td>Confirmed</td>
-							<td class="count_cases" id="info_country1_confirmed"></td>
-							<td class="count_cases" id="info_country2_confirmed"></td>
+							<td id="info_country1_confirmed"></td>
+							<td id="info_country2_confirmed"></td>
 						</tr>
 					</table>
 				</div>
 				<div>
 					<div id="graph"></div>
 					<div class="graph_scales text">
-						<div class="graph_scale"><input id="radio-log" type="radio" name="optradio" onclick="plotCountry()" checked>Log-scale</div>
-                        <div class="graph_scale"><input id="radio-linear" type="radio" name="optradio" onclick="plotCountry()">Linear</div>
-                        <div class="graph_scale"><input id="radio-log-percent" type="radio" name="optradio" onclick="plotCountry()">Log-scale-ratio</div>
-                        <div class="graph_scale"><input id="radio-linear-percent" type="radio" name="optradio" onclick="plotCountry()">Linear-ratio</div>
+						<div class="graph_scale"><input id="radio-linear-percent" type="radio" name="optradio" onclick="plotCountry()" checked>Linear-ratio</div>
+						<div class="graph_scale"><input id="radio-log-percent" type="radio" name="optradio" onclick="plotCountry()">Log-scale-ratio</div>
+						<div class="graph_scale"><input id="radio-linear" type="radio" name="optradio" onclick="plotCountry()">Linear</div>
+						<div class="graph_scale"><input id="radio-log" type="radio" name="optradio" onclick="plotCountry()">Log-scale</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div id="gov_info_1"></div>
 		<div id="gov_info_2"></div>
+		<div id="linkGithubContainer">
+			<a href="https://github.com/com-480-data-visualization/com-480-project-corona-cocos" style="color:#00c">Link to the project</a>
+		</div>
 		<script type="text/javascript" src="visualization.js"></script>
 	</body>
 </html>
